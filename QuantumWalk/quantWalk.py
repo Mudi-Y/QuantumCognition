@@ -167,6 +167,7 @@ def display_output(output):
         print('*' * nbars)
 
 
+
 if __name__ == '__main__':
     # get input from user
     print("Enter a number to be factored:")
@@ -174,7 +175,9 @@ if __name__ == '__main__':
 
     # send problem to QPU
     print("Running on QPU")
-    output = factor(P)
+    # output = factor(P)
+
+    print("inserted string")
 
     # output results
-    display_output(output)
+    # display_output(output)
