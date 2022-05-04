@@ -2,50 +2,64 @@ import networkx as nx
 from collections import defaultdict
 from itertools import combinations
 from dwave.system.samplers import DWaveSampler
+from dwave.system import LeapHybridSampler
 from dwave.system.composites import EmbeddingComposite
 import math
+import matplotlib.pyplot as plt
+import numpy as np
 
-m = 103 #as defined by paper, number of evidence states
+
+m = 4 #as defined by paper, number of evidence states
 
 num_reads = 1000
 
 #paramaters given by Gunnar
-sigma = math.sqrt(1/3)
-mu = 1
-gamma = 8 #lagrange paramater
-
-
-#unsure how to define delta as specified in paper, made it linear with respect to i
-def delta(i):
-    return mu*(i)
-
+sigma = math.sqrt(1/3)  #sigma squared is diffusion
+delta = 1 #drift
+m = 4 #number of qubits
 
 #Hamiltonian mxm grid
 h = [[0]*m for _ in range(m)]
 
 for i in range(m):
-    h[i][i] = delta(i+1)*((i+1)/m)
+    h[i][i] = (delta*(i+1)/m)
     if i+1 < m:
         h[i][i+1] = sigma**2
     if i-1 >= 0: 
         h[i][i-1] = sigma**2
 
 
-#create Q matrix for Ising
-Q = defaultdict(int)
+linear = {}
+qudratic = {('q1','q2'):2, ('q2','q3'):2, ('q3','q4'):2}
 
-for i in range(m):
-    Q[(i,i)] = mu*sigma*h[i][i]
-    if i+1 < m:
-        Q[(i,i+1)] = sigma*h[i][i+1]
-    if i-1 >= 0:
-        Q[(i,i-1)] = sigma*h[i][i-1]
+qubo = {**linear, **qudratic}
 
-chain_strength = gamma*m
+# sampler = LeapHybridSampler()
+# qsampleset = np.array([0]*m)
+# for i in range(2): 
+#     out = sampler.sample_qubo(qubo)
+#     qsampleset += out.record.sample[0]
+
+# print(qsampleset)
 
 sampler = EmbeddingComposite(DWaveSampler())
-response = sampler.sample_ising(Q, {}, chain_strength=chain_strength, num_reads=num_reads, label='QRW Test')
+qsampleset = sampler.sample_qubo(qubo, num_reads=num_reads)
 
-#get result
-sample = response.record.sample[0]
-print(sample)
+
+
+#plot results
+def calcy (set):
+    ret = np.array([0]*len(set.record.sample[0]))
+    for entry in set.record:
+        ret += entry[0]*entry[2]
+    return ret
+
+x = list(range(1, m+1))
+y = calcy(qsampleset)
+
+plt.bar(x, y, align='center')
+plt.xticks(x, x)
+plt.xlabel("Qubit")
+plt.ylabel("1 Count")
+plt.savefig('/workspace/QuantumCognition/fig1')
+
