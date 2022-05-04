@@ -36,18 +36,9 @@ qudratic = {('q1','q2'):2, ('q2','q3'):2, ('q3','q4'):2}
 
 qubo = {**linear, **qudratic}
 
-######################sample with Hybrid Sampler
-# sampler = LeapHybridSampler()
-# qsampleset = np.array([0]*m)
-# for i in range(2): 
-#     out = sampler.sample_qubo(qubo)
-#     qsampleset += out.record.sample[0]
-
-# print(qsampleset)
-
-######################sample with Qudratic Sampler
+# #####################sample with Qudratic Sampler
 # sampler = EmbeddingComposite(DWaveSampler())
-# qsampleset = sampler.sample_qubo(qubo, num_reads=num_reads)
+# result = sampler.sample_qubo(qubo, num_reads=num_reads)
 
 
 ######################sample with CQM Model using hybrid sampler
@@ -59,12 +50,15 @@ cqm.set_objective((4*system_state[0]*system_state[1] + 4*system_state[1]*system_
 sum_to_one = cqm.add_constraint(sum(system_state) == 1, label='sum to one')
 
 sampler = LeapHybridCQMSampler()
-sampleset = sampler.sample_cqm(cqm, time_limit=10)
+sampleset = sampler.sample_cqm(cqm, time_limit=5)
 
 feasible_sampleset = sampleset.filter(lambda row: row.is_feasible)
 num_feasible = len(feasible_sampleset.record)
 results = [str(sampleset.record[i][0]) for i in range(num_feasible)]
 results.sort()
+
+
+
 
 #plot histogram of results
 results_count = Counter(results)
