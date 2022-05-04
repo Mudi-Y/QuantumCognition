@@ -71,7 +71,7 @@ results_count = Counter(results)
 plt.bar(results_count.keys(), results_count.values())
 plt.xlabel("Final State")
 plt.ylabel("Count")
-plt.title(f"Final States after {num_feasible} Samples")
+plt.title(f"Final States after {num_feasible} Feasible Samples")
 plt.xticks(rotation=0)
 plt.savefig('/workspace/QuantumCognition/fig3')
 
