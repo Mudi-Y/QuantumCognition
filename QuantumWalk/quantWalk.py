@@ -44,13 +44,16 @@ def get_counts(set):
     ret = {}
     num_feasible = 0
     for entry in set.record:
-        ret[str(entry[0])] = entry[2]
-        num_feasible += entry[2]
+        if sum(entry[0]) == 1: #filter for only valid solutions
+            ret[str(entry[0])] = entry[2]
+            num_feasible += entry[2]
     return ret, num_feasible
 
 results_count, num_feasible = get_counts(qsampleset)
+
 lists = sorted(results_count.items())
 x, y = zip(*lists)
+
 plt.bar(x, y)
 plt.xlabel("Final State")
 plt.ylabel("Count")
