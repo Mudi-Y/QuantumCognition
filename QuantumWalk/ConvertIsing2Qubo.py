@@ -22,18 +22,3 @@ qsampleset = sampler.sample_qubo(qubo, num_reads=num_reads)
 
 
 
-#plot results
-def calcy (set):
-    ret = np.array([0]*len(set.record.sample[0]))
-    for entry in set.record:
-        ret += entry[0]*entry[2]
-    return ret
-
-x = list(range(1, m+1))
-y = calcy(qsampleset)
-
-plt.bar(x, y, align='center')
-plt.xticks(x, x)
-plt.xlabel("Qubit")
-plt.ylabel("1 Count")
-plt.savefig('/workspace/QuantumCognition/fig2')

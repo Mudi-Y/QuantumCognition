@@ -2,11 +2,13 @@ import networkx as nx
 from collections import defaultdict
 from itertools import combinations
 from dwave.system.samplers import DWaveSampler
-from dwave.system import LeapHybridSampler
+from dwave.system import LeapHybridSampler, LeapHybridCQMSampler
 from dwave.system.composites import EmbeddingComposite
+from dimod import ConstrainedQuadraticModel, Binary
 import math
 import matplotlib.pyplot as plt
 import numpy as np
+from collections import Counter
 
 
 m = 4 #as defined by paper, number of evidence states
@@ -34,6 +36,7 @@ qudratic = {('q1','q2'):2, ('q2','q3'):2, ('q3','q4'):2}
 
 qubo = {**linear, **qudratic}
 
+######################sample with Hybrid Sampler
 # sampler = LeapHybridSampler()
 # qsampleset = np.array([0]*m)
 # for i in range(2): 
@@ -42,24 +45,35 @@ qubo = {**linear, **qudratic}
 
 # print(qsampleset)
 
-sampler = EmbeddingComposite(DWaveSampler())
-qsampleset = sampler.sample_qubo(qubo, num_reads=num_reads)
+######################sample with Qudratic Sampler
+# sampler = EmbeddingComposite(DWaveSampler())
+# qsampleset = sampler.sample_qubo(qubo, num_reads=num_reads)
 
 
+######################sample with CQM Model using hybrid sampler
+cqm = ConstrainedQuadraticModel()
+system_state = [Binary(f'qubit_{i}_state') for i in range(m)]
 
-#plot results
-def calcy (set):
-    ret = np.array([0]*len(set.record.sample[0]))
-    for entry in set.record:
-        ret += entry[0]*entry[2]
-    return ret
+#obj: [ 4 x_0*x_1 + 4 x_1*x_2 + 4 x_2*x_3 ]/2 -2
+cqm.set_objective((4*system_state[0]*system_state[1] + 4*system_state[1]*system_state[2] + 4*system_state[2]*system_state[3])/2 - 2)
 
-x = list(range(1, m+1))
-y = calcy(qsampleset)
+sum_to_one = cqm.add_constraint(sum(system_state) == 1, label='sum to one')
 
-plt.bar(x, y, align='center')
-plt.xticks(x, x)
-plt.xlabel("Qubit")
-plt.ylabel("1 Count")
-plt.savefig('/workspace/QuantumCognition/fig1')
+sampler = LeapHybridCQMSampler()
+sampleset = sampler.sample_cqm(cqm, time_limit=10)
+
+feasible_sampleset = sampleset.filter(lambda row: row.is_feasible)
+results = [str(sampleset.record[i][0]) for i in range(len(feasible_sampleset.record))]
+results.sort()
+
+
+#plot histogram of results
+results_count = Counter(results)
+plt.bar(results_count.keys(), results_count.values())
+plt.xlabel("Final State")
+plt.ylabel("Count")
+plt.xticks(rotation=0)
+plt.savefig('/workspace/QuantumCognition/fig3')
+
+
 
