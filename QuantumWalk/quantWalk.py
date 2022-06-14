@@ -12,7 +12,7 @@ from collections import Counter
 
 
 m = 4 #as defined by paper, number of evidence states
-num_reads = 1000
+num_reads = 10
 
 #paramaters given by Gunnar
 sigma = math.sqrt(1/3)  #sigma squared is diffusion
@@ -37,7 +37,9 @@ qubo = {**linear, **qudratic}
 
 #####################sample with Qudratic Sampler
 sampler = EmbeddingComposite(DWaveSampler())
-qsampleset = sampler.sample_qubo(qubo, num_reads=num_reads)
+#range between 0.5 and 2000.0 micro seconds
+time = 2000
+qsampleset = sampler.sample_qubo(qubo, num_reads=num_reads, annealing_time = time)
 
 def get_counts(set):
     ret = {}
@@ -59,7 +61,9 @@ plt.xlabel("Final State")
 plt.ylabel("Count")
 plt.title(f"Final States after {num_feasible} Feasible Samples on QPU")
 plt.xticks(rotation=0)
-plt.savefig('/workspace/QuantumCognition/fig3_qpu')
+plt.savefig('/workspace/QuantumCognition/test')
+# plt.savefig('/workspace/QuantumCognition/fig3_qpu')
+
 
 
 
