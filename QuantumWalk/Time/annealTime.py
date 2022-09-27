@@ -17,8 +17,8 @@ m = 4 #as defined by paper, number of evidence states
 num_reads = 1000
 
 #paramaters given by Gunnar
-sigma = math.sqrt(1/3)  #sigma squared is diffusion
-delta = 1 #drift
+sigma = math.sqrt(2)  #sigma squared is diffusion
+delta = 4 #drift
 m = 4 #number of qubits
 
 #Hamiltonian mxm grid
@@ -40,7 +40,7 @@ qubo = {**linear, **qudratic}
 #####################sample with Qudratic Sampler
 sampler = EmbeddingComposite(DWaveSampler())
 out = []
-tmax = 150
+tmax = 15
 
 count = 0
 for time in range(0, tmax+1, tmax//15):
@@ -66,11 +66,11 @@ for time in range(0, tmax+1, tmax//15):
     res = (list(x),(list(y)))
     out.append(res)
 
-with open(f'stepped_anneal_{tmax}.pickle', 'wb') as handle:
+with open(f'stepped_anneal_{tmax}_drift{delta}_diff{int(sigma**2)}.pickle', 'wb') as handle:
     pickle.dump(out, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 
-with open(f'stepped_anneal_{tmax}.pickle', 'rb') as handle:
-    b = pickle.load(handle)
+# with open(f'stepped_anneal_{tmax}_drift{delta}_diff{int(sigma**2)}.pickle', 'rb') as handle:
+#     b = pickle.load(handle)
 
-print(len(b))
+# print(len(b))
