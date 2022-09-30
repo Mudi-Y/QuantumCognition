@@ -71,7 +71,7 @@ plt.xlabel("Final State")
 plt.ylabel("Count")
 plt.title(f"Final States after pause at 45% QPU")
 plt.xticks(rotation=0)
-plt.savefig('/workspace/QuantumCognition/QuantumWalk/Schedule/Schedule')
+# plt.savefig('/workspace/QuantumCognition/QuantumWalk/Schedule/Schedule')
 
 
 # res = (list(x),(list(y)))

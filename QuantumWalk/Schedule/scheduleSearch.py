@@ -75,6 +75,6 @@ for i in range(3):
             plt.savefig(f'/workspace/QuantumCognition/QuantumWalk/Schedule/ScheduleSearchPlots/T2/P{pause}_Per{percent}_T{i+1}.png')
             plt.clf()
 
-data.to_pickle('/workspace/QuantumCognition/QuantumWalk/Schedule/ScheduleSearck.pkl')
+data.to_pickle('/workspace/QuantumCognition/QuantumWalk/Schedule/ScheduleSearch.pkl')
 
 
