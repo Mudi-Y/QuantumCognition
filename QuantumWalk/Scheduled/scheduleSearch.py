@@ -11,8 +11,10 @@ import numpy as np
 from collections import Counter
 import pandas as pd
 
-m = 4 #as defined by paper, number of evidence states
+#paramaters
 num_reads = 1000
+
+m = 4 #as defined by paper, number of evidence states
 
 #paramaters given by Gunnar
 sigma = math.sqrt(2)  #sigma squared is diffusion

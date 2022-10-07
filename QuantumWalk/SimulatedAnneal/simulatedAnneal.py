@@ -9,10 +9,9 @@ import math
 import matplotlib.pyplot as plt
 import numpy as np
 from collections import Counter
+import neal
 
-
-#paramaters
-num_reads = 10
+num_reads = 100
 time = 1000 #range between 0.5 and 2000 micro seconds
 
 m = 4 #as defined by paper, number of evidence states
@@ -36,10 +35,14 @@ for i in range(m):
 linear = {}
 qudratic = {('q1','q2'):2, ('q2','q3'):2, ('q3','q4'):2}
 
+# linear = {('q1','q1'):0.25, ('q2','q2'):0.5, ('q3','q3'):0.75, ('q4','q4'):1}
+# qudratic = {('q1','q2'):2.0/3.0, ('q2','q3'):2.0/3.0, ('q3','q4'):2.0/3.0}
+
 qubo = {**linear, **qudratic}
 
 #####################sample with Qudratic Sampler
-sampler = EmbeddingComposite(DWaveSampler())
+sampler = neal.SimulatedAnnealingSampler()
+#range between 0.5 and 2000.0 micro seconds
 qsampleset = sampler.sample_qubo(qubo, num_reads=num_reads, annealing_time = time)
 
 def get_counts(set):
@@ -60,38 +63,6 @@ x, y = zip(*lists)
 plt.bar(x, y)
 plt.xlabel("Final State")
 plt.ylabel("Count")
-plt.title(f"Final States after {num_feasible} Feasible Samples on QPU")
+plt.title(f"Final States after {num_feasible} Feasible Samples on Simulated Annealer")
 plt.xticks(rotation=0)
-plt.savefig('/workspace/QuantumCognition/test')
-# plt.savefig('/workspace/QuantumCognition/fig3_qpu')
-
-
-
-
-# ######################sample with CQM Model using hybrid sampler
-# cqm = ConstrainedQuadraticModel()
-# system_state = [Binary(f'qubit_{i}_state') for i in range(m)]
-
-# #obj: [ 4 x_0*x_1 + 4 x_1*x_2 + 4 x_2*x_3 ]/2 -2
-# cqm.set_objective((4*system_state[0]*system_state[1] + 4*system_state[1]*system_state[2] + 4*system_state[2]*system_state[3])/2 - 2)
-# sum_to_one = cqm.add_constraint(sum(system_state) == 1, label='sum to one')
-
-# sampler = LeapHybridCQMSampler()
-# sampleset = sampler.sample_cqm(cqm, time_limit=5)
-
-# feasible_sampleset = sampleset.filter(lambda row: row.is_feasible)
-# num_feasible = len(feasible_sampleset.record)
-# results = [str(sampleset.record[i][0]) for i in range(num_feasible)]
-# results.sort()
-
-# #plot histogram of results
-# results_count = Counter(results)
-# plt.bar(results_count.keys(), results_count.values())
-# plt.xlabel("Final State")
-# plt.ylabel("Count")
-# plt.title(f"Final States after {num_feasible} Feasible Samples on LeapHybridCQMSampler")
-# plt.xticks(rotation=0)
-# plt.savefig('/workspace/QuantumCognition/fig3_hybrid')
-
-
-
+plt.savefig('QuantumWalk/SimulatedAnneal/Plots/test.png')

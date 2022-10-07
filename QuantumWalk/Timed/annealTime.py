@@ -12,9 +12,10 @@ from collections import Counter
 
 import pickle
 
+#paramaters
+num_reads = 10
 
 m = 4 #as defined by paper, number of evidence states
-num_reads = 1000
 
 #paramaters given by Gunnar
 sigma = math.sqrt(2)  #sigma squared is diffusion
