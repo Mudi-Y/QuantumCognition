@@ -3,6 +3,7 @@ import math as math
 import matplotlib.pyplot as plt
 from scipy import linalg
 from numpy.core.numeric import array_equal
+from dwave.system import DWaveSampler, EmbeddingComposite
 
 class IsingModel:
   "create a quantum circuit with initial state Init, q qubits, time=t (for generating U), diffusion=sigmaSq, drift=delta"
@@ -36,12 +37,14 @@ class IsingModel:
 
 
   def gen_ising(self):
+    "create Insing formulation in accordance with definiton discussed with Thi Ha"
     linear = self.linearTerms()
     quad = self.quadraticTerms()
     return (linear, quad)
 
   
   def linearTerms(self):
+    "create a dictionary of the linear terms"
     linear = {}
 
     for state in self.states:
@@ -56,10 +59,11 @@ class IsingModel:
   
 
   def quadraticTerms(self):
+    "create a dictionary of qudradic terms"
     quad = {}
 
     for state1i in range(2**self.q):
-      for state2i in range(state1i+1, 2**self.q):
+      for state2i in range(2**self.q):
         state1str = self.states[state1i]
         state2str = self.states[state2i]
 
@@ -71,7 +75,7 @@ class IsingModel:
 
 
   def annealQPU(self):
-    from dwave.system import DWaveSampler, EmbeddingComposite
+    "anneal on QPU"
     sampler = EmbeddingComposite(DWaveSampler())
     lin, quad = self.isingModel
     sampleset = sampler.sample_ising(lin, quad, num_reads=1000)
@@ -79,6 +83,7 @@ class IsingModel:
 
 
   def eig(self):
+    "get eigen vectors and values of H"
     l, v = np.linalg.eig(self.H)
     self.elambdas = l
     self.evectors = v
@@ -114,5 +119,4 @@ class IsingModel:
       ret += mult*coef
     
     return ret
-
 
