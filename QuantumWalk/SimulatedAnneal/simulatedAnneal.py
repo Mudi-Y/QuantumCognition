@@ -32,16 +32,17 @@ for i in range(m):
         h[i][i-1] = sigma**2
 
 
-linear = {}
-qudratic = {('q1','q2'):2, ('q2','q3'):2, ('q3','q4'):2}
+# linear = {}
+# qudratic = {('q1','q2'):2, ('q2','q3'):2, ('q3','q4'):2}
 
-# linear = {('q1','q1'):0.25, ('q2','q2'):0.5, ('q3','q3'):0.75, ('q4','q4'):1}
-# qudratic = {('q1','q2'):2.0/3.0, ('q2','q3'):2.0/3.0, ('q3','q4'):2.0/3.0}
+linear = {('q1','q1'):0.25, ('q2','q2'):0.5, ('q3','q3'):0.75, ('q4','q4'):1}
+qudratic = {('q1','q2'):2.0/3.0, ('q2','q3'):2.0/3.0, ('q3','q4'):2.0/3.0}
 
 qubo = {**linear, **qudratic}
 
 #####################sample with Qudratic Sampler
-sampler = neal.SimulatedAnnealingSampler()
+# sampler = neal.SimulatedAnnealingSampler()
+sampler = EmbeddingComposite(DWaveSampler())
 #range between 0.5 and 2000.0 micro seconds
 qsampleset = sampler.sample_qubo(qubo, num_reads=num_reads, annealing_time = time)
 

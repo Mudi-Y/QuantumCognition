@@ -1,10 +1,8 @@
+# /usr/local/bin/python -i /workspace/QuantumCognition/QuantumWalk/IsingAnnealer/ising_annealer.py
+
 from ising_model import IsingModel
-
 a = IsingModel(q=2, t=1, sigmaSq=2, delta=4)
-lin, quad = a.isingModel
 
-print(lin)
-print(quad)
-
-res = a.annealQPU()
-print(res)
+# res = a.annealQPU()
+res = a.calculateEnergy([1,-1,1,-1])
+print(res, end = "\n")

@@ -33,15 +33,6 @@ for i in range(m):
         h[i][i-1] = sigma**2
 
 
-linear = {}
-qudratic = {('q1','q2'):2, ('q2','q3'):2, ('q3','q4'):2}
-
-qubo = {**linear, **qudratic}
-
-#####################sample with Qudratic Sampler
-sampler = EmbeddingComposite(DWaveSampler())
-qsampleset = sampler.sample_qubo(qubo, num_reads=num_reads, annealing_time = time)
-
 def get_counts(set):
     ret = {}
     num_feasible = 0
@@ -51,21 +42,45 @@ def get_counts(set):
             num_feasible += entry[2]
     return ret, num_feasible
 
+
+#####################sample with Qudratic Sampler
+print('\n')
+
+from dwave.system import DWaveSampler, EmbeddingComposite
+sampler = EmbeddingComposite(DWaveSampler())
+linear = {}
+qudratic = {('q1','q2'):2, ('q2','q3'):2, ('q3','q4'):2}
+qubo = {**linear, **qudratic}
+# # qudratic(0,0,0,1) = 0
+# # qudratic(0,0,1,0) = 0
+# # qudratic(0,1,0,0) = 0
+# # qudratic(1,0,0,0) = 0
+qsampleset = sampler.sample_qubo(qubo, num_reads=1000)
 results_count, num_feasible = get_counts(qsampleset)
+print(qsampleset, end = '\n')
+print('\n')
 
-lists = sorted(results_count.items())
+from dwave.system import DWaveSampler, EmbeddingComposite
+sampler = EmbeddingComposite(DWaveSampler())
+linear = {'q1':0.25, 'q2':0.5, 'q3':0.75, 'q4':1}
+qudratic = {('q1','q2'):2.0/3.0, ('q2','q3'):2.0/3.0, ('q3','q4'):2.0/3.0}
+isampleset = sampler.sample_ising(linear, qudratic, num_reads=1000)
+results_count, num_feasible = get_counts(isampleset)
+print(isampleset, end = '\n')
+print('\n') 
 
-x, y = zip(*lists)
+# lists = sorted(results_count.items())
 
-plt.bar(x, y)
-plt.xlabel("Final State")
-plt.ylabel("Count")
-plt.title(f"Final States after {num_feasible} Feasible Samples on QPU")
-plt.xticks(rotation=0)
-plt.savefig('/workspace/QuantumCognition/test')
-# plt.savefig('/workspace/QuantumCognition/fig3_qpu')
+# x, y = zip(*lists)
 
-
+# plt.bar(x, y)
+# plt.xlabel("Final State")
+# plt.ylabel("Count")
+# plt.title(f"Ising Final States after {num_feasible} Feasible Samples on Hybrid")
+# plt.xticks(rotation=0)
+# # plt.savefig('/workspace/QuantumCognition/test')
+# plt.savefig('/workspace/QuantumCognition/IsingHybrid')
+                 
 
 
 # ######################sample with CQM Model using hybrid sampler

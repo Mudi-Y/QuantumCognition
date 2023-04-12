@@ -13,11 +13,9 @@ class IsingModel:
     self.sigmaSq = sigmaSq
     self.delta = delta
     self.init_H()
-    self.init_U()
     self.states = self.genStates()
     self.isingModel = self.gen_ising()
   
-
 
   def init_H(self):
     #State Hamiltonian
@@ -25,7 +23,6 @@ class IsingModel:
     #default paramaters given by Gunnar
     delta = self.delta #drift
     sigmaSq = self.sigmaSq #diffusion
-    sigma = self.sigma  #sigma, not really used
 
     #Hamiltonian mxm grid
     h = [[0]*m for _ in range(m)]
@@ -36,10 +33,6 @@ class IsingModel:
         if i-1 >= 0: 
             h[i][i-1] = sigmaSq
     self.H = np.array(h)
-
-
-  def init_U(self):
-    self.U = linalg.expm(-(1j)*self.t*self.H)
 
 
   def gen_ising(self):
@@ -54,11 +47,14 @@ class IsingModel:
     for state in self.states:
       diag = int(state, 2)
 
-      key = (state, state)
-      value = self.U[diag][diag]
-      linear[key] = value
+      # key = (state, state)
+      key = state
+      value = self.H[diag][diag]
+      if value != 0:
+        linear[key] = value
     return linear
   
+
   def quadraticTerms(self):
     quad = {}
 
@@ -68,8 +64,9 @@ class IsingModel:
         state2str = self.states[state2i]
 
         key = (state1str, state2str)
-        value = self.U[state1i][state2i]
-        quad[key] = value
+        value = self.H[state1i][state2i]
+        if value != 0:
+          quad[key] = value
     return quad
 
 
@@ -78,11 +75,7 @@ class IsingModel:
     sampler = EmbeddingComposite(DWaveSampler())
     lin, quad = self.isingModel
     sampleset = sampler.sample_ising(lin, quad, num_reads=1000)
-    print(sampleset)
-  
-
-  def annealHybrid(self):
-    return
+    return sampleset
 
 
   def eig(self):
@@ -101,3 +94,25 @@ class IsingModel:
     for i in range(0,n):
       ret.append(bin(i)[2:].zfill(self.q))
     return ret
+
+  
+  def calculateEnergy(self, spins):
+    "given state as a list of spins for each state, calculate energy of Ising formulation"
+    spins = {state : energy for state, energy in zip(self.states, spins)}
+    ret = 0
+
+    #linear terms
+    for state, coef in self.isingModel[0].items():
+      spin = spins[state]
+      ret += spin*coef
+
+    #qudratic terms
+    for state, coef in self.isingModel[1].items():
+      spin1 = spins[state[0]]
+      spin2 = spins[state[1]]
+      mult = spin1*spin2
+      ret += mult*coef
+    
+    return ret
+
+
