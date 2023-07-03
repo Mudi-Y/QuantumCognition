@@ -5,6 +5,8 @@ from scipy import linalg
 from numpy.core.numeric import array_equal
 from dwave.system import DWaveSampler, EmbeddingComposite
 
+#based on ising_mode.py. Differences are in LinearTerms and QudraticTerms. Encoding based on binary expansion.
+
 class IsingModel:
   "create a quantum circuit with initial state Init, q qubits, time=t (for generating U), diffusion=sigmaSq, drift=delta"
   def __init__(self, q=4, Init=None, t=1, sigmaSq=(1/3), delta=1):
@@ -55,7 +57,8 @@ class IsingModel:
       # multiply by two because in qudratic terms we count both (a,b) and (b,a) interactions
       value = 2 * self.H[diag][diag]
       if value != 0:
-        linear[key] = value
+        linear[key+"a"] = value*(1/2)
+        linear[key+"a"] = value*(1/4)
     return linear
   
 
@@ -68,10 +71,12 @@ class IsingModel:
         state1str = self.states[state1i]
         state2str = self.states[state2i]
 
-        key = (state1str, state2str)
+        key1 = (state1str+"a", state2str+"a")
+        key2 = (state1str+"b", state2str+"b")
         value = self.H[state1i][state2i]
         if value != 0:
-          quad[key] = value
+          quad[key1] = value*(1/2)
+          quad[key2] = value*(1/4)
     return quad
 
 
