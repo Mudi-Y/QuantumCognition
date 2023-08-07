@@ -40,8 +40,9 @@ anneal_schedule = []
 # anneal_schedule = [(0.0,0.0),(10.0,0.25),(20,0.25),(30.0,0.5),(40.0,0.5),(50.0,0.75),(60.0,0.75),(70.0,1.0)]
 # anneal_schedule = [(0.0,0.0),(10.0,0.4),(115.0,0.4),(125.0,1.0)]
 # anneal_schedule = [(0.0,0.0),(5.0,0.4),(35.0,0.4),(40.0,0.8),(50.0,0.8),(55.0,1.0)]
-# anneal_schedule = [(0.0,0.0),(10.0,0.4),(15.0,0.4),(30.0,0.8),(35.0,0.8),(65.0,1.0)]
-anneal_schedule = [(0.0, 0.0), (5.0, 0.4), (15.0, 0.4), (25.0, 0.8), (35.0, 0.8), (55.0, 1.0)]
+# anneal_schedule = [(0.0,0.0),(5.0,0.4),(35.0,0.4),(40.0,1.0)] #original suggested by Raghav
+anneal_schedule = [(0.0,0.0),(10.0,0.4),(15.0,0.4),(30.0,0.8),(35.0,0.8),(65.0,1.0)]
+# anneal_schedule = [(0.0, 0.0), (5.0, 0.4), (15.0, 0.4), (25.0, 0.8), (35.0, 0.8), (55.0, 1.0)]
 sampleset = sampler.sample(bqm, num_reads=num_reads, num_sweeps = 100) if sys.argv[1] == "simulated" else (sampler.sample(bqm, num_reads=num_reads, anneal_schedule = anneal_schedule) if anneal_schedule else sampler.sample(bqm, num_reads=num_reads))
 print("Anneal Schedule: ", anneal_schedule)
 

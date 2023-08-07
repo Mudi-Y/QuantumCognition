@@ -17,26 +17,28 @@ def extract_value(filename, p):
 
 
 #Extract Data from Logs
-x = np.array([x for x in range(2,18,2)])
-SA = pd.DataFrame(index = [2,4,6,8,10,12,14,16], columns = ["acc", "time", "size", "acc_avg", "time_avg", "size_avg"])
-QA = pd.DataFrame(index = [2,4,6,8,10,12,14,16], columns = ["acc", "time", "size", "acc_avg", "time_avg", "size_avg"])
+#setup code for extraction. IMPORTANT!
+number = "4"
+path = "/workspace/QuantumCognition/QuantumWalk/ConvertAndAnneal/"
+annealMethods = ["simulated", "QPU"]
+groups=[2,3,4,5,6,7,8,9]
+attempts = 3
+
+#make dataframes to store data
+SA = pd.DataFrame(index = groups, columns = ["acc", "time", "size", "acc_avg", "time_avg", "size_avg", "acc_std", "time_std", "size_std"])
+QA = pd.DataFrame(index = groups, columns = ["acc", "time", "size", "acc_avg", "time_avg", "size_avg", "acc_std", "time_std", "size_std"])
 
 #make relevant fields arrays
-for group in [2,4,6,8,10,12,14,16]:
+for group in groups:
     for data in ["acc", "time", "size"]:
         SA[data][group] = []
         QA[data][group] = []
 
 
-number = "2"
-path = "/workspace/QuantumCognition/QuantumWalk/ConvertAndAnneal/"
-annealMethods = ["simulated", "QPU"]
-groups=[2,4,6,8,10,12,14,16]
-
-
+#extraction script
 for annealMethod in annealMethods:
         for group in groups:
-            for i in range(10):
+            for i in range(attempts):
                 fname = path+f"Results/{annealMethod}{number}/{annealMethod}_group{group}_attempt{i+1}"
                 if annealMethod == "simulated":
                     #extract and append data for simulated
@@ -47,7 +49,7 @@ for annealMethod in annealMethods:
                     SA["size"][group].append(extract_value(fname, p))
 
                     p = re.compile("Time:  [-+]?(?:\d*\.*\d+)")
-                    SA["time"][group].append(extract_value(fname, p)*1000000) #convert from seconds to microseconds
+                    SA["time"][group].append(extract_value(fname, p)*1000) #convert from seconds to miliseconds
                 else:
                     #extract and append data for QPU
                     p = re.compile("Absolute Error:  [-+]?(?:\d*\.*\d+)")
@@ -57,13 +59,17 @@ for annealMethod in annealMethods:
                     QA["size"][group].append(extract_value(fname, p))
 
                     p = re.compile(".*qpu_sampling_time.* [-+]?(?:\d*\.*\d+)")
-                    QA["time"][group].append(extract_value(fname, p))
+                    QA["time"][group].append(extract_value(fname, p)*0.001) #convert from microseconds to miliseconds
 
-#make relevant fields arrays
-for group in [2,4,6,8,10,12,14,16]:
+#Fill in Avg, STDEV
+for group in groups:
     for data in ["acc_avg", "time_avg", "size_avg"]:
         SA[data][group] = np.mean(SA[data[:-4]][group])
         QA[data][group] = np.mean(QA[data[:-4]][group])
+for group in groups:
+    for data in ["acc_std", "time_std", "size_std"]:
+        SA[data][group] = np.std(SA[data[:-4]][group])
+        QA[data][group] = np.std(QA[data[:-4]][group])
 
 #font specifications
 plt.rcParams['font.size'] = 12
@@ -71,7 +77,7 @@ plt.rcParams["font.family"] = "Serif"
 
 
 #X values are group sizes
-x = np.array([x for x in range(2,18,2)])
+x = groups
 
 #Dummy data to display
 # sa_accuracy = np.sin(x ** 2)
@@ -89,50 +95,70 @@ qa_time = QA['time_avg'].tolist()
 sa_size = SA['size_avg'].tolist()
 qa_size = QA['size_avg'].tolist()
 
-#Ploting 3x1 plots (3 x 1" x 9")
-fig, (ax1, ax2, ax3) = plt.subplots(3, sharex=True, figsize = (3, 6))
-fig.suptitle('Vertically stacked subplots')
-
-ax1.scatter(x, sa_accuracy, color='#f8a652')
-ax1.scatter(x, qa_accuracy, color='#5f7d41')
-ax1.set_title("Accuracy")
-ax1.set(ylabel="Absolute Error")
-ax1.set_yscale('log')
-
-ax2.scatter(x, sa_time, color='#f8a652')
-ax2.scatter(x, qa_time, color='#5f7d41')
-ax2.set_title("Timing")
-ax2.set(ylabel="Micro Seconds")
-
-ax3.scatter(x, qa_size, color='r')
-ax3.set_title("Size")
-ax3.set(xlabel="Number of Groups", ylabel="Number of Qubits")
-
-fig.tight_layout()
-fig.savefig('/workspace/QuantumCognition/QuantumWalk/ConvertAndAnneal/plots/vertical')
-fig.savefig('/workspace/QuantumCognition/QuantumWalk/ConvertAndAnneal/plots/vertical.pdf')
+sa_acc_std = SA['acc_std'].tolist()
+qa_acc_std = QA['acc_std'].tolist()
+sa_time_std = SA['time_std'].tolist()
+qa_time_std = QA['time_std'].tolist()
 
 
+# #Ploting 3x1 plots (3 x 1" x 9")
+# fig, (ax1, ax2, ax3) = plt.subplots(3, sharex=True, figsize = (3, 6))
+# fig.suptitle('Vertically stacked subplots')
 
-#Plotting 1x3 plots (3 x 3" x 3")
-fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize = (9,3))
-fig.suptitle('Horizontally stacked subplots')
+# ax1.scatter(x, sa_accuracy, color='#f8a652')
+# ax1.scatter(x, qa_accuracy, color='#5f7d41')
+# ax1.set_title("Accuracy")
+# ax1.set(ylabel="Absolute Error")
 
-ax1.scatter(x, sa_accuracy, color='#f8a652')
-ax1.scatter(x, qa_accuracy, color='#5f7d41')
-ax1.set_title("Accuracy")
-ax1.set(xlabel="Number of Groups", ylabel="Absolute Error")
-ax1.set_yscale('log')
+# ax2.scatter(x, sa_time, color='#f8a652')
+# ax2.scatter(x, qa_time, color='#5f7d41')
+# ax2.set_title("Timing")
+# ax2.set(ylabel="Micro Seconds")
 
-ax2.scatter(x, sa_time, color='#f8a652')
-ax2.scatter(x, qa_time, color='#5f7d41')
-ax2.set_title("Timing")
-ax2.set(xlabel="Number of Groups", ylabel="Micro Seconds")
+# ax3.scatter(x, qa_size, color='r')
+# ax3.set_title("Size")
+# ax3.set(xlabel="Number of Groups", ylabel="Number of Qubits")
 
-ax3.scatter(x, qa_size, color='r')
-ax3.set_title("Size")
-ax3.set(xlabel="Number of Groups", ylabel="Number of Qubits")
+# fig.tight_layout()
+# fig.savefig('/workspace/QuantumCognition/QuantumWalk/ConvertAndAnneal/plots/vertical')
+# fig.savefig('/workspace/QuantumCognition/QuantumWalk/ConvertAndAnneal/plots/vertical.pdf')
 
-fig.tight_layout()
-fig.savefig('/workspace/QuantumCognition/QuantumWalk/ConvertAndAnneal/plots/horizontal')
-fig.savefig('/workspace/QuantumCognition/QuantumWalk/ConvertAndAnneal/plots/horizontal.pdf')
+
+#plot three seperate plots
+plt.figure()
+plt.errorbar(x, sa_accuracy, yerr = sa_acc_std, ls='none', capsize=6, color='k') 
+plt.plot(x, sa_accuracy, '-o', color='#f8a652',label="SA")
+plt.errorbar(x, qa_accuracy, yerr = sa_acc_std, ls='none', capsize=6, color='k') 
+plt.plot(x, qa_accuracy, '-o', color='#5f7d41',label="QA-P")
+plt.xlabel("Number of Groups (r)")
+plt.ylabel("Absolute Error")
+plt.tight_layout()
+plt.legend()
+plt.grid()
+plt.savefig('/workspace/QuantumCognition/QuantumWalk/ConvertAndAnneal/plots/Accuracy')
+plt.savefig('/workspace/QuantumCognition/QuantumWalk/ConvertAndAnneal/plots/Accuracy.pdf')
+
+
+plt.figure()
+plt.errorbar(x, sa_time, yerr = sa_time_std, ls='none', capsize=6, color='k') 
+plt.plot(x, sa_time, '-o', color='#f8a652', label="SA")
+plt.errorbar(x, qa_time, yerr = qa_time_std, ls='none', capsize=6, color='k') 
+plt.plot(x, qa_time, '-o', color='#5f7d41', label="QA-P")
+plt.xlabel("Number of Groups (r)") 
+plt.ylabel("Milliseconds")
+plt.tight_layout()
+plt.legend()
+plt.grid()
+plt.savefig('/workspace/QuantumCognition/QuantumWalk/ConvertAndAnneal/plots/Timing')
+plt.savefig('/workspace/QuantumCognition/QuantumWalk/ConvertAndAnneal/plots/Timing.pdf')
+
+
+plt.figure()
+plt.plot(x, qa_size, '-o', color='k')
+plt.xlabel("Number of Groups (r)")
+plt.ylabel("Number of Qubits")
+plt.tight_layout()
+plt.grid()
+plt.savefig('/workspace/QuantumCognition/QuantumWalk/ConvertAndAnneal/plots/Size')
+plt.savefig('/workspace/QuantumCognition/QuantumWalk/ConvertAndAnneal/plots/Size.pdf')
+
