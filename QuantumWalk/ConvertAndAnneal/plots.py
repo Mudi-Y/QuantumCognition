@@ -134,8 +134,8 @@ ax.errorbar(x, qa_accuracy, yerr = sa_acc_std, ls='none', capsize=6, color='k')
 ax.plot(x, qa_accuracy, '-o', color='#5f7d41',label="QA-P")
 major_ticks = [2,4,6,8,10]
 minor_ticks = [2,3,4,5,6,7,8,9,10]
-ymajor_ticks = [0,2,4,6,8,10]
-yminor_ticks = [0,1,2,3,4,5,6,7,8,9,10]
+ymajor_ticks = [0,1,2,3,4]
+yminor_ticks = [0,0.5,1,1.5,2,2.5,3.5,4]
 ax.set_xticks(major_ticks)
 ax.set_xticks(minor_ticks, minor=True)
 ax.set_yticks(ymajor_ticks)

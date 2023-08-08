@@ -310,7 +310,7 @@ if __name__ == "__main__":
     #for 9  : -1
     #for 10 : 
     #for 11 : 
-    L = sp.Symbol('-3.5')
+    L = sp.Symbol('-3.35')
     D_pl = Hp_new_num_exp - L*Cp_num_exp
 
     D_pl = D_pl.subs(L,float(str(L)))
