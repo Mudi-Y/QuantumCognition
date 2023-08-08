@@ -1,7 +1,7 @@
-number = "4"
+number = "5"
 path = "/workspace/QuantumCognition/QuantumWalk/ConvertAndAnneal/"
-annealMethods = ["QPU"]
-groups=[9]
+annealMethods = ["simulated","QPU"]
+groups=[2,3,4,5,6,7,8]
 
 with (open(f'{path}joblist.txt', 'w') as f):
     for annealMethod in annealMethods:
@@ -11,7 +11,7 @@ with (open(f'{path}joblist.txt', 'w') as f):
                 fname = path+f"Results/{annealMethod}{number}/{annealMethod}_group{group}_BQM"
                 command_str = f"/usr/local/bin/python /workspace/QuantumCognition/QuantumWalk/ConvertAndAnneal/ConstructBQM.py {group} > {fname}; "
                 f.write(command_str)
-                for i in range(3):
+                for i in [5,6,7,8,9,10]:
                     fname = path+f"Results/{annealMethod}{number}/{annealMethod}_group{group}_attempt{i+1}"
                     command_str = f"/usr/local/bin/python /workspace/QuantumCognition/QuantumWalk/ConvertAndAnneal/anneal.py {annealMethod} > {fname}; "
                     f.write(command_str)

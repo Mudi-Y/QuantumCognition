@@ -18,11 +18,11 @@ def extract_value(filename, p):
 
 #Extract Data from Logs
 #setup code for extraction. IMPORTANT!
-number = "4"
+number = "5"
 path = "/workspace/QuantumCognition/QuantumWalk/ConvertAndAnneal/"
 annealMethods = ["simulated", "QPU"]
 groups=[2,3,4,5,6,7,8,9]
-attempts = 3
+attempts = 10
 
 #make dataframes to store data
 SA = pd.DataFrame(index = groups, columns = ["acc", "time", "size", "acc_avg", "time_avg", "size_avg", "acc_std", "time_std", "size_std"])
@@ -125,40 +125,69 @@ qa_time_std = QA['time_std'].tolist()
 
 
 #plot three seperate plots
-plt.figure()
-plt.errorbar(x, sa_accuracy, yerr = sa_acc_std, ls='none', capsize=6, color='k') 
-plt.plot(x, sa_accuracy, '-o', color='#f8a652',label="SA")
-plt.errorbar(x, qa_accuracy, yerr = sa_acc_std, ls='none', capsize=6, color='k') 
-plt.plot(x, qa_accuracy, '-o', color='#5f7d41',label="QA-P")
-plt.xlabel("Number of Groups (r)")
-plt.ylabel("Absolute Error")
-plt.tight_layout()
-plt.legend()
-plt.grid()
+fig = plt.figure(figsize = (2.5, 2.5))
+ax = fig.add_subplot(1, 1, 1)
+plt.subplots_adjust(left=0.225, right=0.959, top=0.97, bottom=0.2)
+ax.errorbar(x, sa_accuracy, yerr = sa_acc_std, ls='none', capsize=6, color='k') 
+ax.plot(x, sa_accuracy, '-o', color='#f8a652',label="SA")
+ax.errorbar(x, qa_accuracy, yerr = sa_acc_std, ls='none', capsize=6, color='k') 
+ax.plot(x, qa_accuracy, '-o', color='#5f7d41',label="QA-P")
+major_ticks = [2,4,6,8,10]
+minor_ticks = [2,3,4,5,6,7,8,9,10]
+ymajor_ticks = [0,2,4,6,8,10]
+yminor_ticks = [0,1,2,3,4,5,6,7,8,9,10]
+ax.set_xticks(major_ticks)
+ax.set_xticks(minor_ticks, minor=True)
+ax.set_yticks(ymajor_ticks)
+ax.set_yticks(yminor_ticks, minor = True)
+ax.set_xlabel("Number of Groups (r)")
+ax.set_ylabel("Absolute Error")
+ax.legend(borderpad=.1, loc='upper left', labelspacing=.15)
+ax.grid(visible=True, which='major', color='gray', linestyle='-')
+plt.grid(visible=True, which='minor', color='gray', linestyle='--')
 plt.savefig('/workspace/QuantumCognition/QuantumWalk/ConvertAndAnneal/plots/Accuracy')
-plt.savefig('/workspace/QuantumCognition/QuantumWalk/ConvertAndAnneal/plots/Accuracy.pdf')
+plt.savefig('/workspace/QuantumCognition/QuantumWalk/ConvertAndAnneal/plots/annealing_accuracy.pdf')
 
 
-plt.figure()
-plt.errorbar(x, sa_time, yerr = sa_time_std, ls='none', capsize=6, color='k') 
-plt.plot(x, sa_time, '-o', color='#f8a652', label="SA")
-plt.errorbar(x, qa_time, yerr = qa_time_std, ls='none', capsize=6, color='k') 
-plt.plot(x, qa_time, '-o', color='#5f7d41', label="QA-P")
-plt.xlabel("Number of Groups (r)") 
-plt.ylabel("Milliseconds")
-plt.tight_layout()
-plt.legend()
-plt.grid()
+fig = plt.figure(figsize = (2.5, 2.5))
+ax = fig.add_subplot(1, 1, 1)
+plt.subplots_adjust(left=0.225, right=0.959, top=0.975, bottom=0.2)
+ax.errorbar(x, sa_time, yerr = sa_time_std, ls='none', capsize=6, color='k') 
+ax.plot(x, sa_time, '-o', color='#f8a652', label="SA")
+ax.errorbar(x, qa_time, yerr = qa_time_std, ls='none', capsize=6, color='k') 
+ax.plot(x, qa_time, '-o', color='#5f7d41', label="QA-P")
+major_ticks = [2,4,6,8,10]
+minor_ticks = [2,3,4,5,6,7,8,9,10]
+ymajor_ticks = [0,10,20,30]
+yminor_ticks = [0,5,10,15,20,25,30]
+ax.set_xticks(major_ticks)
+ax.set_xticks(minor_ticks, minor=True)
+ax.set_yticks(ymajor_ticks)
+ax.set_yticks(yminor_ticks, minor = True)
+ax.set_xlabel("Number of Groups (r)") 
+ax.set_ylabel("Time (ms)")
+ax.legend(borderpad=.1, loc='upper left', labelspacing=.15)
+ax.grid(visible=True, which='major', color='gray', linestyle='-')
+ax.grid(visible=True, which='minor', color='gray', linestyle='--')
 plt.savefig('/workspace/QuantumCognition/QuantumWalk/ConvertAndAnneal/plots/Timing')
-plt.savefig('/workspace/QuantumCognition/QuantumWalk/ConvertAndAnneal/plots/Timing.pdf')
+plt.savefig('/workspace/QuantumCognition/QuantumWalk/ConvertAndAnneal/plots/annealing_timing.pdf')
 
 
-plt.figure()
-plt.plot(x, qa_size, '-o', color='k')
-plt.xlabel("Number of Groups (r)")
-plt.ylabel("Number of Qubits")
-plt.tight_layout()
-plt.grid()
+fig = plt.figure(figsize = (2.5, 2.5))
+ax = fig.add_subplot(1, 1, 1)
+plt.subplots_adjust(left=0.225, right=0.959, top=0.975, bottom=0.2)
+ax.plot(x, qa_size, '-o', color='k')
+major_ticks = [2,4,6,8,10]
+minor_ticks = [2,3,4,5,6,7,8,9,10]
+ymajor_ticks = [0,20,40,60,80]
+yminor_ticks = [0,10,20,30,40,50,60,70,80]
+ax.set_xticks(major_ticks)
+ax.set_xticks(minor_ticks, minor=True)
+ax.set_yticks(ymajor_ticks)
+ax.set_yticks(yminor_ticks, minor = True)
+ax.set_xlabel("Number of Groups (r)")
+ax.set_ylabel("Number of Qubits")
+ax.grid(visible=True, which='major', color='gray', linestyle='-')
+ax.grid(visible=True, which='minor', color='gray', linestyle='--')
 plt.savefig('/workspace/QuantumCognition/QuantumWalk/ConvertAndAnneal/plots/Size')
-plt.savefig('/workspace/QuantumCognition/QuantumWalk/ConvertAndAnneal/plots/Size.pdf')
-
+plt.savefig('/workspace/QuantumCognition/QuantumWalk/ConvertAndAnneal/plots/annealing_size.pdf')

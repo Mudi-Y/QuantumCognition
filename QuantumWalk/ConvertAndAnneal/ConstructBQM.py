@@ -305,6 +305,11 @@ if __name__ == "__main__":
     print(Hp_new_num_exp,Cp_num_exp)
     #Choose lambda, L
 
+    #-3.5 works well for everything
+    #for 8 : -3.35 (unused)
+    #for 9  : -1
+    #for 10 : 
+    #for 11 : 
     L = sp.Symbol('-3.5')
     D_pl = Hp_new_num_exp - L*Cp_num_exp
 
