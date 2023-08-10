@@ -1,0 +1,23 @@
+##########
+ QPU
+Anneal Schedule:  [(0.0, 0.0), (5.0, 0.4), (15.0, 0.4), (25.0, 0.8), (35.0, 0.8), (55.0, 1.0)]
+Number of Qubits:  2
+Time:  0.06418299674987793
+Num Reads:  100
+Info:  {'timing': {'qpu_sampling_time': 10600.0, 'qpu_anneal_time_per_sample': 55.0, 'qpu_readout_time_per_sample': 30.38, 'qpu_access_time': 26358.77, 'qpu_access_overhead_time': 616.23, 'qpu_programming_time': 15758.77, 'qpu_delay_time_per_sample': 20.62, 'total_post_processing_time': 316.0, 'post_processing_overhead_time': 316.0}, 'problem_id': 'e4a67ddb-c8ef-4785-ae98-71d09d55c305'}
+Energy:  3.5
+Sample:  {'b1': 1, 'b2': 1}
+Spin Values:  {'z1': 1, 'z2': 1}
+New Eigenvector:  00
+New Cost:  3.5
+Sum of bi^2:  1
+Starting Lambda:  -3.5
+Estimated Eigenvalue:  0
+Eigen Values:  [-7.2213144 +0.j -0.67759867+0.j  6.67759867+0.j 13.2213144 +0.j]
+Eigen Vectors:  [[-0.54888202+0.j  0.61516393+0.j -0.52488396-0.j  0.21165705+0.j]
+ [ 0.66060827+0.j -0.06947238+0.j -0.58416074-0.j  0.46639741+0.j]
+ [-0.46639741+0.j -0.58416074+0.j  0.06947238-0.j  0.66060827+0.j]
+ [ 0.21165705+0.j  0.52488396+0.j  0.61516393+0.j  0.54888202+0.j]]
+Absolute Error:  7.22131439706305
+Groups:  1
+Signs:  [1]

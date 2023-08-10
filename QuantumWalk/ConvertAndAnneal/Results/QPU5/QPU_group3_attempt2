@@ -1,0 +1,23 @@
+##########
+ QPU
+Anneal Schedule:  [(0.0, 0.0), (10.0, 0.4), (15.0, 0.4), (30.0, 0.8), (35.0, 0.8), (65.0, 1.0)]
+Number of Qubits:  15
+Time:  0.23478293418884277
+Num Reads:  100
+Info:  {'timing': {'qpu_sampling_time': 17168.0, 'qpu_anneal_time_per_sample': 65.0, 'qpu_readout_time_per_sample': 86.06, 'qpu_access_time': 32926.37, 'qpu_access_overhead_time': 10140.63, 'qpu_programming_time': 15758.37, 'qpu_delay_time_per_sample': 20.62, 'post_processing_overhead_time': 2168.0, 'total_post_processing_time': 2168.0}, 'problem_id': '11588e1b-1ca6-4cb9-a4b3-5d0a7b72029c'}
+Energy:  -4.5
+Sample:  {'b1': 1, 'b10': 0, 'b11': 0, 'b12': 1, 'b13': 1, 'b14': 1, 'b15': 1, 'b2': 0, 'b3': 1, 'b4': 1, 'b5': 1, 'b6': 1, 'b7': 0, 'b8': 1, 'b9': 1}
+Spin Values:  {'z1': 1, 'z10': -1, 'z11': -1, 'z12': 1, 'z13': 1, 'z14': 1, 'z15': 1, 'z2': -1, 'z3': 1, 'z4': 1, 'z5': 1, 'z6': 1, 'z7': -1, 'z8': 1, 'z9': 1}
+New Eigenvector:  011000
+New Cost:  -4.5
+Sum of bi^2:  5
+Starting Lambda:  -3.5
+Estimated Eigenvalue:  -4.40000000000000
+Eigen Values:  [-7.2213144 +0.j -0.67759867+0.j  6.67759867+0.j 13.2213144 +0.j]
+Eigen Vectors:  [[-0.54888202+0.j  0.61516393+0.j -0.52488396-0.j  0.21165705+0.j]
+ [ 0.66060827+0.j -0.06947238+0.j -0.58416074-0.j  0.46639741+0.j]
+ [-0.46639741+0.j -0.58416074+0.j  0.06947238-0.j  0.66060827+0.j]
+ [ 0.21165705+0.j  0.52488396+0.j  0.61516393+0.j  0.54888202+0.j]]
+Absolute Error:  2.82131439706305
+Groups:  3
+Signs:  [-1, 1, 1]

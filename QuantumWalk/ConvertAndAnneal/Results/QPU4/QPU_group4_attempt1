@@ -1,0 +1,23 @@
+##########
+ QPU
+Anneal Schedule:  [(0.0, 0.0), (10.0, 0.4), (15.0, 0.4), (30.0, 0.8), (35.0, 0.8), (65.0, 1.0)]
+Number of Qubits:  22
+Time:  0.37078332901000977
+Num Reads:  100
+Info:  {'timing': {'qpu_sampling_time': 18346.0, 'qpu_anneal_time_per_sample': 65.0, 'qpu_readout_time_per_sample': 97.84, 'qpu_access_time': 34102.77, 'qpu_access_overhead_time': 2340.23, 'qpu_programming_time': 15756.77, 'qpu_delay_time_per_sample': 20.62, 'post_processing_overhead_time': 537.0, 'total_post_processing_time': 537.0}, 'problem_id': '6a3392f8-7e3f-490e-a2bb-7747facae57a'}
+Energy:  -15.0
+Sample:  {'b1': 1, 'b10': 1, 'b11': 1, 'b12': 0, 'b13': 0, 'b14': 0, 'b15': 1, 'b16': 1, 'b17': 1, 'b18': 1, 'b19': 0, 'b2': 1, 'b20': 1, 'b21': 0, 'b22': 0, 'b3': 0, 'b4': 1, 'b5': 1, 'b6': 0, 'b7': 1, 'b8': 0, 'b9': 1}
+Spin Values:  {'z1': 1, 'z10': 1, 'z11': 1, 'z12': -1, 'z13': -1, 'z14': -1, 'z15': 1, 'z16': 1, 'z17': 1, 'z18': 1, 'z19': -1, 'z2': 1, 'z20': 1, 'z21': -1, 'z22': -1, 'z3': -1, 'z4': 1, 'z5': 1, 'z6': -1, 'z7': 1, 'z8': -1, 'z9': 1}
+New Eigenvector:  00011100
+New Cost:  -15.0
+Sum of bi^2:  6
+Starting Lambda:  -3.5
+Estimated Eigenvalue:  -6.00000000000000
+Eigen Values:  [-7.2213144 +0.j -0.67759867+0.j  6.67759867+0.j 13.2213144 +0.j]
+Eigen Vectors:  [[-0.54888202+0.j  0.61516393+0.j -0.52488396-0.j  0.21165705+0.j]
+ [ 0.66060827+0.j -0.06947238+0.j -0.58416074-0.j  0.46639741+0.j]
+ [-0.46639741+0.j -0.58416074+0.j  0.06947238-0.j  0.66060827+0.j]
+ [ 0.21165705+0.j  0.52488396+0.j  0.61516393+0.j  0.54888202+0.j]]
+Absolute Error:  1.22131439706305
+Groups:  4
+Signs:  [-1, -1, 1, 1]
