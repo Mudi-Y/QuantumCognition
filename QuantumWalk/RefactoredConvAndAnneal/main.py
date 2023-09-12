@@ -7,19 +7,21 @@ from plots import GeneratePlots
 
 class AnnealConfig:
     """Annealing paramaters. 
-        Default values: method = 'simulated', schedule = [(0.0,0.0),(10.0,0.4),(15.0,0.4),(30.0,0.8),(35.0,0.8),(65.0,1.0)], groups = [2,3,4,5,6], num_runs = 3, trial = 1.
-        output at /Results/{method}{trial}."""
+        Default values: method = 'simulated', schedule = [(0.0,0.0),(10.0,0.4),(15.0,0.4),(30.0,0.8),(35.0,0.8),(65.0,1.0)], groups = [2,3,4,5,6], num_runs = 3, trial = 1, output = {working directory}
+        results in {output}/Results/{method}{trial}."""
     def __init__(self, method = "simulated", 
         schedule = [(0.0,0.0),(10.0,0.4),(15.0,0.4),(30.0,0.8),(35.0,0.8),(65.0,1.0)], 
         groups = [2,3,4,5,6],
         num_runs = 3,
-        trial = 1):
+        trial = 1,
+        output = None):
         self.m_method = method
         self.m_schedule = schedule
         self.m_groups = groups
         self.m_runs = num_runs
         self.m_trial = trial
-        self.m_output = f'Results/Trial_{self.m_trial}/'
+        self.m_output = output if output else ""
+        self.m_output += f'Results/Trial_{self.m_trial}/'
 
 
 class AnnealHandler:
@@ -61,6 +63,18 @@ class AnnealHandler:
 
 
     def Plot(self):
-        """Generate plots form annealing results. Running both both simulated and QPU first for same trial number and number of runs. Save in /Plots/ directory."""
+        """Generate plots form annealing results. Running both both simulated and QPU first for same trial number and number of runs. Save in /Plots/ directory.
+            plots size vs accuracy, time, and number of qubits in three seperate plots."""
         outpath = f'Results/Plots/Trial_{self.m_AnnealConfig.m_trial}/'
         GeneratePlots(self.m_AnnealConfig.m_trial, self.m_AnnealConfig.m_groups, self.m_AnnealConfig.m_runs, outpath)
+
+
+
+if __name__ == "__main__":
+    A = AnnealHandler()
+    A.ConstructBQMs()
+    A.Anneal()
+    A.SetAnnealQPU()
+    A.Anneal()
+    A.Plot()
+

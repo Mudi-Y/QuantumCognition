@@ -32,23 +32,25 @@ def AnnealBQM(BQMPath, valsPath, method, schedule, outpath):
         logfile.write("##########\n")
         logfile.write("Simulated Annealing")
     else:
+        # anneal_schedule = [(0.0,0.0),(10.0,0.25),(20,0.25),(30.0,0.5),(40.0,0.5),(50.0,0.75),(60.0,0.75),(70.0,1.0)]
+        # anneal_schedule = [(0.0,0.0),(10.0,0.4),(115.0,0.4),(125.0,1.0)]
+        # anneal_schedule = [(0.0,0.0),(5.0,0.4),(35.0,0.4),(40.0,0.8),(50.0,0.8),(55.0,1.0)]
+        # anneal_schedule = [(0.0,0.0),(5.0,0.4),(35.0,0.4),(40.0,1.0)] #original suggested by Raghav
+        # anneal_schedule = [(0.0,0.0),(10.0,0.4),(15.0,0.4),(30.0,0.8),(35.0,0.8),(65.0,1.0)]
+        # anneal_schedule = [(0.0, 0.0), (5.0, 0.4), (15.0, 0.4), (25.0, 0.8), (35.0, 0.8), (55.0, 1.0)]
+        anneal_schedule = schedule
+        
         sampler = EmbeddingComposite(DWaveSampler())
         logfile.write("##########\n")
-        logfile.write("QPU")
+        logfile.write("QPU\n")
+        logfile.write("Anneal Schedule:  ")
+        logfile.write(str(anneal_schedule)+'\n')
 
     #Solve the BQM
     num_reads = 100
     start = time.time()
-    # anneal_schedule = [(0.0,0.0),(10.0,0.25),(20,0.25),(30.0,0.5),(40.0,0.5),(50.0,0.75),(60.0,0.75),(70.0,1.0)]
-    # anneal_schedule = [(0.0,0.0),(10.0,0.4),(115.0,0.4),(125.0,1.0)]
-    # anneal_schedule = [(0.0,0.0),(5.0,0.4),(35.0,0.4),(40.0,0.8),(50.0,0.8),(55.0,1.0)]
-    # anneal_schedule = [(0.0,0.0),(5.0,0.4),(35.0,0.4),(40.0,1.0)] #original suggested by Raghav
-    # anneal_schedule = [(0.0,0.0),(10.0,0.4),(15.0,0.4),(30.0,0.8),(35.0,0.8),(65.0,1.0)]
-    # anneal_schedule = [(0.0, 0.0), (5.0, 0.4), (15.0, 0.4), (25.0, 0.8), (35.0, 0.8), (55.0, 1.0)]
-    anneal_schedule = schedule
     sampleset = sampler.sample(bqm, num_reads=num_reads, num_sweeps = 100) if method == "simulated" else (sampler.sample(bqm, num_reads=num_reads, anneal_schedule = anneal_schedule) if anneal_schedule else sampler.sample(bqm, num_reads=num_reads))
-    logfile.write("Anneal Schedule:  ")
-    logfile.write(str(anneal_schedule)+'\n')
+
 
     end = time.time()
     logfile.write("Number of Qubits:  ")
