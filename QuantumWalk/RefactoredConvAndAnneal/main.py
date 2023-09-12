@@ -1,6 +1,4 @@
 import numpy as np
-import sys
-import sympy as sp
 import pickle
 
 from ConstructBQM import buildBQM
