@@ -1,23 +1,15 @@
 import numpy as np
 import sympy as sp
 import time
-import sys
+import os
 import pickle
 from sympy.parsing.sympy_parser import parse_expr
-
-from dwave.system.samplers import DWaveSampler
-from dwave.system.composites import EmbeddingComposite
-
 from dimod import BinaryQuadraticModel
-
-import neal
-import dimod
-
 from utils import HamiltonianToPauli, PauliToString
 
 def quadratizeExpr(sym_expr, expr_type):
 
-    print('Quadratizing ',sym_expr)
+    #print('Quadratizing ',sym_expr)
     if expr_type == "SPIN":
         #convert to binary
         #spin = 2*binary - 1
@@ -30,7 +22,7 @@ def quadratizeExpr(sym_expr, expr_type):
             bin_sym = sp.Symbol('b'+str(spin)[1:])
             sym_expr = sym_expr.subs(spin,2*bin_sym-1)
             sym_expr =sp.expand(sym_expr)
-        print('Spin to Binary (z = 2b -1): ',sym_expr)
+        #print('Spin to Binary (z = 2b -1): ',sym_expr)
 
    # sym_expr = parse_expr(string_input)
     coeff_from_terms = sym_expr.as_coefficients_dict()
@@ -62,7 +54,7 @@ def quadratizeExpr(sym_expr, expr_type):
                 #while new_sym_var in sym_expr.free_symbols:
                 new_sym_var = sp.symbols(str(sym_var1)[0]+str(var_num))
                 var_num += 1
-                print(" New symbol ", new_sym_var, " = ",sym_var1, "*",sym_var2 )
+                #print(" New symbol ", new_sym_var, " = ",sym_var1, "*",sym_var2 )
 
                 #wherever we find old symbols, replace them with the new symbol
                 for term2 in coeff_from_terms:
@@ -222,26 +214,26 @@ def generateNewHamiltonian(H_expr, num_orig_qubits, num_new_groups):
     return new_Hamiltonian_exprs
 
 
+def buildBQM(num_new_groups, Hamiltonian, BQMPath, valsPath):
+    """Construct BQMs from provided hamiltonian and AnnealConfig paramaters. Save in the /BQM/ directory in both .pkl and human readable formats."""
 
-
-if __name__ == "__main__":
-    Hamiltonian = np.array([[0, 6, 0, 0], [6, 2, 6., 0], [0, 6, 4, 6], [0, 0, 6, 6.0]])
+    #create log file
+    logfile = BQMPath+".log"
+    os.makedirs(os.path.dirname(logfile), exist_ok=True)
+    logfile = open(logfile, 'w')
 
     labels,coeffs=HamiltonianToPauli(Hamiltonian)
     Pauli_string, _ = PauliToString(labels,coeffs)
-    print(Pauli_string)
+    logfile.write(Pauli_string+'\n')
     num_qubits = 2
-    #H_orig = "(-J/2)*(1+g)*x1*x2  + (-J/2)*(1-g)*y1*y2 + (-B)*z1 + (-B)*z2"
-   # H_orig = Pauli_string
+
     H_orig = "3*i +6*x2 -z2 +3*x1*x2 +3*y1*y2-2*z1"
 
     H_orig_exp = parse_expr(H_orig)
-    repeat = 1
-    num_new_groups = int(sys.argv[1])   #2**num_qubits
-    num_new_qubits = num_new_groups*num_qubits
 
     Hp_new_sub_exprs = generateNewHamiltonian(H_orig_exp, num_qubits, num_new_groups)
-    print(Hp_new_sub_exprs)
+
+    logfile.write(str(Hp_new_sub_exprs)+'\n')
 
     Hp_new_expr = sp.Symbol("0")
 
@@ -258,7 +250,8 @@ if __name__ == "__main__":
                 Hp_new_expr += Hp_new_sub_expr
 
     Hp_new_expr = parse_expr(str(Hp_new_expr))
-    print("New Hamiltonian: ", Hp_new_expr)
+    logfile.write("New Hamiltonian:")
+    logfile.write(str(Hp_new_expr)+'\n')
 
     Cp_exp = sp.Symbol("0")
     for pmcombo_num in range(2**num_qubits):
@@ -276,19 +269,11 @@ if __name__ == "__main__":
         Cp_exp += combo_term ** 2
 
     Cp_exp= parse_expr(str(Cp_exp))
-    print("Cp matrix ", Cp_exp)
+    logfile.write("Cp matrix ")
+    logfile.write(str(Cp_exp)+'\n')
 
     Hp_new_num_exp = Hp_new_expr.subs([(sp.Symbol('B'), 0.001), (sp.Symbol('J'), -0.1), (sp.Symbol('g'), 0)])
     Cp_num_exp = Cp_exp
-
-    #### Choose signs
-    
-    # Sign_vals = [-1,-1,-1,1,1,1] if (num_new_groups == 6) else [-1,-1,-1,-1,-1,-1,1,1,1,1,1,1] #should be length of num_new_groups
-    
-    # if len(Sign_vals) != num_new_groups:
-    #     raise ValueError(
-    #         "Sign values not given for all groups"
-    #     )
 
     Sign_vals = []
     for i in range (num_new_groups):
@@ -302,20 +287,17 @@ if __name__ == "__main__":
         Cp_num_exp = Cp_num_exp.subs('S' + str(i), Sign_vals[i-1])
         Hp_new_num_exp = Hp_new_num_exp.subs('S' + str(i), Sign_vals[i-1])
 
-    print(Hp_new_num_exp,Cp_num_exp)
+    logfile.write(str(Hp_new_num_exp)+'\n')
+    logfile.write(str(Cp_num_exp)+'\n')
     #Choose lambda, L
-
-    #-3.5 works well for everything
-    #for 8 : -3.35 (unused)
-    #for 9  : -1
-    #for 10 : 
-    #for 11 : 
+    
     L = sp.Symbol('-3.35')
     D_pl = Hp_new_num_exp - L*Cp_num_exp
 
     D_pl = D_pl.subs(L,float(str(L)))
     D_pl_expanded = sp.expand(D_pl)
-    print('Dpl ', D_pl_expanded)
+    logfile.write('Dpl ')
+    logfile.write(str(D_pl_expanded)+'\n')
 
     D_pl_expanded_sym = D_pl_expanded
     for sym in D_pl_expanded.free_symbols:
@@ -325,19 +307,29 @@ if __name__ == "__main__":
     num_orig_vars = len(orig_vars)
     D_pl_quad = quadratizeExpr(D_pl_expanded_sym,'SPIN')
 
-    print('Quadratized ',D_pl_quad)
+    logfile.write('Quadratized ')
+    logfile.write(str(D_pl_quad)+'\n')
 
     bqm = constructAnnealBQM(D_pl_quad)
 
+    logfile.write('BQM ')
+    logfile.write(str(bqm)+'\n')
 
-    file = open('/workspace/QuantumCognition/QuantumWalk/ConvertAndAnneal/bqm', 'wb')
+    os.makedirs(os.path.dirname(BQMPath), exist_ok=True)
+    file = open(BQMPath, 'wb')
     pickle.dump(bqm, file)
     file.close()
 
     vals = (Sign_vals, num_new_groups, num_orig_vars, Cp_num_exp, orig_vars, L)
+    
+    logfile.write('Vals ')
+    logfile.write(str(vals)+'\n')
 
-    file = open('/workspace/QuantumCognition/QuantumWalk/ConvertAndAnneal/vals', 'wb')
+    os.makedirs(os.path.dirname(valsPath), exist_ok=True)
+    file = open(valsPath, 'wb')
     pickle.dump(vals, file)
     file.close()
 
-    print("################# BQM DONE #################")
+    logfile.write("################# BQM DONE #################")
+    
+    logfile.close()

@@ -13,7 +13,7 @@ from dimod import BinaryQuadraticModel
 import neal
 import dimod
 
-from misc import HamiltonianToPauli, PauliToString
+from utils import HamiltonianToPauli, PauliToString
 
 file = open('/workspace/QuantumCognition/QuantumWalk/ConvertAndAnneal/bqm', 'rb')
 bqm = pickle.load(file)

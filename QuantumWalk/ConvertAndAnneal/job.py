@@ -1,7 +1,7 @@
-number = "5"
+number = "6"
 path = "/workspace/QuantumCognition/QuantumWalk/ConvertAndAnneal/"
-annealMethods = ["simulated", "QPU"]
-groups=[2,3,4,5,6,7,8,9]
+annealMethods = ["simulated"]
+groups=[2]
 
 with (open(f'{path}joblist.txt', 'w') as f):
     for annealMethod in annealMethods:
