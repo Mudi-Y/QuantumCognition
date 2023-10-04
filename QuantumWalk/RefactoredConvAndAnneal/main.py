@@ -66,15 +66,16 @@ class AnnealHandler:
         """Generate plots form annealing results. Running both both simulated and QPU first for same trial number and number of runs. Save in /Plots/ directory.
             plots size vs accuracy, time, and number of qubits in three seperate plots."""
         outpath = f'Results/Plots/Trial_{self.m_AnnealConfig.m_trial}/'
-        GeneratePlots(self.m_AnnealConfig.m_trial, self.m_AnnealConfig.m_groups, self.m_AnnealConfig.m_runs, outpath)
+        plots = ["acc", "time", "size"]
+        GeneratePlots(self.m_AnnealConfig.m_trial, self.m_AnnealConfig.m_groups, self.m_AnnealConfig.m_runs, outpath, plots)
 
 
 
 if __name__ == "__main__":
     A = AnnealHandler()
-    A.ConstructBQMs()
-    A.Anneal()
-    A.SetAnnealQPU()
-    A.Anneal()
+    # A.ConstructBQMs()
+    # A.Anneal()
+    # A.SetAnnealQPU()
+    # A.Anneal()
     A.Plot()
 
