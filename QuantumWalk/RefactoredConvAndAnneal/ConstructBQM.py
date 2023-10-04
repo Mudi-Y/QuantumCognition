@@ -224,6 +224,7 @@ def buildBQM(num_new_groups, Hamiltonian, BQMPath, valsPath):
 
     labels,coeffs=HamiltonianToPauli(Hamiltonian)
     Pauli_string, _ = PauliToString(labels,coeffs)
+    logfile.write("Pauli String:  ")
     logfile.write(Pauli_string+'\n')
     num_qubits = 2
 
@@ -233,6 +234,7 @@ def buildBQM(num_new_groups, Hamiltonian, BQMPath, valsPath):
 
     Hp_new_sub_exprs = generateNewHamiltonian(H_orig_exp, num_qubits, num_new_groups)
 
+    logfile.write("\nProblem Hamiltonian New Subexpressions:  ")
     logfile.write(str(Hp_new_sub_exprs)+'\n')
 
     Hp_new_expr = sp.Symbol("0")
@@ -250,7 +252,7 @@ def buildBQM(num_new_groups, Hamiltonian, BQMPath, valsPath):
                 Hp_new_expr += Hp_new_sub_expr
 
     Hp_new_expr = parse_expr(str(Hp_new_expr))
-    logfile.write("New Hamiltonian:")
+    logfile.write("\nNew Hamiltonian:  ")
     logfile.write(str(Hp_new_expr)+'\n')
 
     Cp_exp = sp.Symbol("0")
@@ -269,7 +271,7 @@ def buildBQM(num_new_groups, Hamiltonian, BQMPath, valsPath):
         Cp_exp += combo_term ** 2
 
     Cp_exp= parse_expr(str(Cp_exp))
-    logfile.write("Cp matrix ")
+    logfile.write("\nCp matrix:  ")
     logfile.write(str(Cp_exp)+'\n')
 
     Hp_new_num_exp = Hp_new_expr.subs([(sp.Symbol('B'), 0.001), (sp.Symbol('J'), -0.1), (sp.Symbol('g'), 0)])
@@ -287,7 +289,9 @@ def buildBQM(num_new_groups, Hamiltonian, BQMPath, valsPath):
         Cp_num_exp = Cp_num_exp.subs('S' + str(i), Sign_vals[i-1])
         Hp_new_num_exp = Hp_new_num_exp.subs('S' + str(i), Sign_vals[i-1])
 
+    logfile.write("\nProblem Hamiltonian New Numerical Expressions:  ")
     logfile.write(str(Hp_new_num_exp)+'\n')
+    logfile.write("\nCp Numerical Expressions:  ")
     logfile.write(str(Cp_num_exp)+'\n')
     #Choose lambda, L
     
@@ -296,7 +300,7 @@ def buildBQM(num_new_groups, Hamiltonian, BQMPath, valsPath):
 
     D_pl = D_pl.subs(L,float(str(L)))
     D_pl_expanded = sp.expand(D_pl)
-    logfile.write('Dpl ')
+    logfile.write('\nPre-Qudratized Expression:  ')
     logfile.write(str(D_pl_expanded)+'\n')
 
     D_pl_expanded_sym = D_pl_expanded
@@ -307,12 +311,12 @@ def buildBQM(num_new_groups, Hamiltonian, BQMPath, valsPath):
     num_orig_vars = len(orig_vars)
     D_pl_quad = quadratizeExpr(D_pl_expanded_sym,'SPIN')
 
-    logfile.write('Quadratized ')
+    logfile.write('\nQuadratized Expression:  ')
     logfile.write(str(D_pl_quad)+'\n')
 
     bqm = constructAnnealBQM(D_pl_quad)
 
-    logfile.write('BQM ')
+    logfile.write('\nFinal BQM:  ')
     logfile.write(str(bqm)+'\n')
 
     os.makedirs(os.path.dirname(BQMPath), exist_ok=True)
@@ -322,14 +326,23 @@ def buildBQM(num_new_groups, Hamiltonian, BQMPath, valsPath):
 
     vals = (Sign_vals, num_new_groups, num_orig_vars, Cp_num_exp, orig_vars, L)
     
-    logfile.write('Vals ')
-    logfile.write(str(vals)+'\n')
+    logfile.write('\nSign Values:  ')
+    logfile.write(str(vals[0])+'\n')
+    logfile.write("\nNumber of New Groups:  ")
+    logfile.write(str(vals[1])+'\n')
+    logfile.write("\nNumber of Original Variables:  ")
+    logfile.write(str(vals[2])+'\n')
+    logfile.write("\nCp Numerical Expressions:  ")
+    logfile.write(str(vals[3])+'\n')
+    logfile.write("\nOriginal Variables:  ")
+    logfile.write(str(vals[4])+'\n')
+    logfile.write("\nLambda:  ")
+    logfile.write(str(vals[5])+'\n')
 
     os.makedirs(os.path.dirname(valsPath), exist_ok=True)
     file = open(valsPath, 'wb')
     pickle.dump(vals, file)
     file.close()
 
-    logfile.write("################# BQM DONE #################")
-    
+    logfile.write("################# BQM GENERATED #################")
     logfile.close()
