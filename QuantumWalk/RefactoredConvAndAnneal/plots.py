@@ -5,7 +5,7 @@ import re
 import os
 
 
-def GeneratePlots(trial, groups, runs, outpath, plots):
+def GeneratePlots(trial, groups, runs, datapath, outpath, plots):
     #extraction function
     def extract_value(filename, p):
         with open(filename, mode="rt", encoding="utf-8") as docFile:
@@ -41,7 +41,7 @@ def GeneratePlots(trial, groups, runs, outpath, plots):
     for annealMethod in annealMethods:
             for group in groups:
                 for i in range(attempts):
-                    fname = f"Results/Trial_{number}/{annealMethod}_group{group}_attempt{i+1}"
+                    fname = datapath + f"{annealMethod}/group{group}/attempt{i+1}"
                     if annealMethod == "simulated":
                         #extract and append data for simulated
                         p = re.compile("Absolute Error:  [-+]?(?:\d*\.*\d+)")

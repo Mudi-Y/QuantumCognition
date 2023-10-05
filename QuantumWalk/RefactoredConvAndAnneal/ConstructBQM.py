@@ -214,7 +214,7 @@ def generateNewHamiltonian(H_expr, num_orig_qubits, num_new_groups):
     return new_Hamiltonian_exprs
 
 
-def buildBQM(num_new_groups, Hamiltonian, BQMPath, valsPath):
+def buildBQM(num_new_groups, Hamiltonian, lambdaVal, BQMPath, valsPath):
     """Construct BQMs from provided hamiltonian and AnnealConfig paramaters. Save in the /BQM/ directory in both .pkl and human readable formats."""
 
     #create log file
@@ -295,7 +295,7 @@ def buildBQM(num_new_groups, Hamiltonian, BQMPath, valsPath):
     logfile.write(str(Cp_num_exp)+'\n')
     #Choose lambda, L
     
-    L = sp.Symbol('-3.35')
+    L = sp.Symbol(str(lambdaVal))
     D_pl = Hp_new_num_exp - L*Cp_num_exp
 
     D_pl = D_pl.subs(L,float(str(L)))
