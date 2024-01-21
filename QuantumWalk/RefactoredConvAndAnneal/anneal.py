@@ -6,8 +6,8 @@ import pickle
 from dwave.system.samplers import DWaveSampler
 from dwave.system.composites import EmbeddingComposite
 
-import neal
 import dimod
+from dwave.samplers import SimulatedAnnealingSampler
 
 def AnnealBQM(BQMPath, valsPath, method, schedule, outpath):
 
@@ -28,7 +28,7 @@ def AnnealBQM(BQMPath, valsPath, method, schedule, outpath):
 
     #D-Wave
     if method == "simulated":
-        sampler = neal.SimulatedAnnealingSampler()
+        sampler = SimulatedAnnealingSampler()
         logfile.write("##########\nSimulated Annealing")
     else:
         # anneal_schedule = [(0.0,0.0),(10.0,0.25),(20,0.25),(30.0,0.5),(40.0,0.5),(50.0,0.75),(60.0,0.75),(70.0,1.0)]
