@@ -1,7 +1,7 @@
 [configuration]
 method = "simulated"
 schedule = [(0.0,0.0),(10.0,0.4),(15.0,0.4),(30.0,0.8),(35.0,0.8),(65.0,1.0)]
-groups = [2,3,4]
+groups = 2,3
 num_runs = 3
 trial = 1
 lambdaVal = -3.35

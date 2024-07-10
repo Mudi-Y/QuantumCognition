@@ -35,9 +35,19 @@ class AnnealConfig:
 
 
     def ReadConfig(self, file):
-        import configparser
+        import configparser, ast
         configParser = configparser.RawConfigParser()   
         configParser.read(file)
+
+        self.m_method = configParser.get("configuration","method")
+        self.m_method = ast.literal_eval(self.m_method)
+        self.m_schedule = configParser.get("configuration","schedule")
+        self.m_schedule = ast.literal_eval(self.m_schedule)
+        self.m_groups = configParser.get("configuration","groups")
+        self.m_groups = ast.literal_eval(self.m_groups)
+        self.m_runs = configParser.getint("configuration", "num_runs")
+        self.m_trial = configParser.getint("configuration","trial")
+        self.m_lambdaVal = configParser.getfloat("configuration","lambdaVal")
 
 
 class AnnealHandler:
@@ -96,8 +106,8 @@ class AnnealHandler:
 
 if __name__ == "__main__":
     A = AnnealHandler()
-    A.ReadConfig("/workspace/QuantumCognition/QuantumWalk/RefactoredConvAndAnneal/config.txt")
-    A.ReadHamiltonian("/workspace/QuantumCognition/QuantumWalk/RefactoredConvAndAnneal/hamiltonian.txt")
+    A.ReadConfig("/workspaces/QuantumCognition/QuantumWalk/RefactoredConvAndAnneal/config.txt")
+    A.ReadHamiltonian("/workspaces/QuantumCognition/QuantumWalk/RefactoredConvAndAnneal/hamiltonian.txt")
     A.ConstructBQMs()
     A.Anneal()
     A.SetAnnealQPU()

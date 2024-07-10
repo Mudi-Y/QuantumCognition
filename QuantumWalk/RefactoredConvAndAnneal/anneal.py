@@ -39,7 +39,7 @@ def AnnealBQM(BQMPath, valsPath, method, schedule, outpath):
         # anneal_schedule = [(0.0, 0.0), (5.0, 0.4), (15.0, 0.4), (25.0, 0.8), (35.0, 0.8), (55.0, 1.0)]
         anneal_schedule = schedule
         
-        sampler = EmbeddingComposite(DWaveSampler())
+        sampler = EmbeddingComposite(DWaveSampler(token="DEV-bc8e40b9fdc4a711ebf6cdcf71747114f89d8baf"))
         logfile.write("##########\nQPU")
         logfile.write("\nAnneal Schedule:  ")
         logfile.write(str(anneal_schedule)+'\n')
