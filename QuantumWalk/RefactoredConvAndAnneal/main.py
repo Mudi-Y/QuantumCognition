@@ -48,6 +48,7 @@ class AnnealConfig:
         self.m_runs = configParser.getint("configuration", "num_runs")
         self.m_trial = configParser.getint("configuration","trial")
         self.m_lambdaVal = configParser.getfloat("configuration","lambdaVal")
+        self.m_output = f'Results/Trial_{self.m_trial}/'
 
 
 class AnnealHandler:
@@ -105,11 +106,24 @@ class AnnealHandler:
 
 
 if __name__ == "__main__":
+    # A = AnnealHandler()
+    # A.ReadConfig("/workspaces/QuantumCognition/QuantumWalk/RefactoredConvAndAnneal/config.txt")
+    # A.ReadHamiltonian("/workspaces/QuantumCognition/QuantumWalk/RefactoredConvAndAnneal/hamiltonian.txt")
+    # A.ConstructBQMs()
+    # A.Anneal()
+    # A.SetAnnealQPU()
+    # A.Anneal()
+    # A.Plot()
+
+
     A = AnnealHandler()
-    A.ReadConfig("/workspaces/QuantumCognition/QuantumWalk/RefactoredConvAndAnneal/config.txt")
-    A.ReadHamiltonian("/workspaces/QuantumCognition/QuantumWalk/RefactoredConvAndAnneal/hamiltonian.txt")
-    A.ConstructBQMs()
-    A.Anneal()
-    A.SetAnnealQPU()
-    A.Anneal()
-    A.Plot()
+    for i in [4, 8, 16, 32, 64]:
+        A.ReadConfig("/workspaces/QuantumCognition/QuantumWalk/RefactoredConvAndAnneal/config.txt")
+        A.m_AnnealConfig.m_trial = i
+        A.m_AnnealConfig.m_output = f'Results/Trial_{i}/'
+        A.ReadHamiltonian(f"/workspaces/QuantumCognition/QuantumWalk/ScalingTests/hamiltonians/hamiltonian_{i}.txt")
+        A.ConstructBQMs()
+        A.Anneal()
+        A.SetAnnealQPU()
+        A.Anneal()
+        # A.Plot()
