@@ -6,7 +6,7 @@ from RefactoredConvAndAnneal import main as RCA
 
 
 #path for results
-outPath = "/workspaces/QuantumCognition/QuantumWalk/RefactoredScalingTests/ImportantResults/"
+outPath = "/workspaces/QuantumCognition/QuantumWalk/RefactoredScalingTests/Outputs/"
 
 # #find appropriate hyperparamaters for each size of hamiltonian
 # #paramas are group sizes, anneal schedule, and lambda
