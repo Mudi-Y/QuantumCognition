@@ -14,7 +14,8 @@ def extract_value(filename, p):
         
         #potentially failed anneal
         if val == []:
-            return -1.0
+            print(filename, "Invalid anneal!")
+            return np.inf
         
         if "{" in val[0]:
             val = float(re.findall(r"[-+]?(?:\d*\.*\d+)", val[0])[0])
@@ -27,8 +28,8 @@ path = "/workspaces/QuantumCognition/QuantumWalk/RefactoredScalingTests/Plotting
 datapath = "/workspaces/QuantumCognition/QuantumWalk/RefactoredScalingTests/Outputs/"
 
 #dataframes
-simulatedDF = pd.DataFrame(columns=["hSize", "group", "lambda", "schedule", "data"])
-quantumDF = pd.DataFrame(columns=["hSize", "group", "lambda", "schedule", "data"])
+simulatedDF = pd.DataFrame(columns=["hSize", "group", "lambda", "schedule", "acc_avg", "time_avg", "acc_std", "time_std"])
+quantumDF = pd.DataFrame(columns=["hSize", "group", "lambda", "schedule", "acc_avg", "time_avg", "acc_std", "time_std"])
 
 #values to look through data and fill in dataframe
 attempts = [1,2,3] #number of attempts for each aneal configuration
@@ -75,20 +76,33 @@ for size in hSizes:
 
                 #Fill in Avg, STDEV
                 for df in [SA, QA]:
-                    df["acc_avg"] = np.mean(df["acc"])
-                    df["time_avg"] = np.mean(df["time"])
-                    df["acc_std"] = np.std(df["acc"])
-                    df["time_std"] = np.std(df["time"])
-                
+                    df["acc_avg"] = np.mean([x for x in df["acc"] if x < np.inf])
+                    df["time_avg"] = np.mean([x for x in df["time"] if x < np.inf])
+                    df["acc_std"] = np.std([x for x in df["acc"] if x < np.inf])
+                    df["time_std"] = np.std([x for x in df["time"] if x < np.inf])
+
                 #create meta dataframes to be appended to main dataframes
                 SA_meta = pd.DataFrame({"hSize": f"hSize_{size}",
                                         "group": f"group_{group}",
                                         "lambda": f"lambda_{lamb}",
-                                        "schedule": f"schedule_{schedule}"}, index = [0])
+                                        "schedule": f"schedule_{schedule}",
+                                        "acc_avg": SA["acc_avg"][1],
+                                        "acc_std": SA["acc_std"][1],
+                                        "time_avg": SA["time_avg"][1],
+                                        "time_std": SA["time_std"][1]
+                                        }, index = [0])
                 QA_meta = pd.DataFrame({"hSize": f"hSize_{size}",
                                         "group": f"group_{group}",
                                         "lambda": f"lambda_{lamb}",
-                                        "schedule": f"schedule_{schedule}"}, index = [0])
+                                        "schedule": f"schedule_{schedule}",
+                                        "acc_avg": QA["acc_avg"][1],
+                                        "acc_std": QA["acc_std"][1],
+                                        "time_avg": QA["time_avg"][1],
+                                        "time_std": QA["time_std"][1]
+                                        }, index = [0])
                 
                 simulatedDF = pd.concat([simulatedDF, SA_meta], ignore_index=True)
                 quantumDF = pd.concat([quantumDF, QA_meta], ignore_index=True)
+
+
+# print(simulatedDF)
