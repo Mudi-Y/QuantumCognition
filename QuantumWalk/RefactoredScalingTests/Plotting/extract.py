@@ -1,5 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
 import pandas as pd
 import re
 import os
@@ -9,6 +11,11 @@ def extract_value(filename, p):
     with open(filename, mode="rt", encoding="utf-8") as docFile:
         doc = docFile.read()
         val = re.findall(p, doc)
+        
+        #potentially failed anneal
+        if val == []:
+            return -1.0
+        
         if "{" in val[0]:
             val = float(re.findall(r"[-+]?(?:\d*\.*\d+)", val[0])[0])
         else:
@@ -39,31 +46,32 @@ for size in hSizes:
         for lamb in lambdas:
             for schedule in annealSchedules:
                 #make dataframes to store data
-                SA = pd.DataFrame(columns = ["acc", "time", "acc_avg", "time_avg", "acc_std", "time_std"])
-                QA = pd.DataFrame(columns = ["acc", "time", "acc_avg", "time_avg", "acc_std", "time_std"])
+                SA = pd.DataFrame(index=attempts, columns = ["acc", "time", "acc_avg", "time_avg", "acc_std", "time_std"])
+                QA = pd.DataFrame(index=attempts, columns = ["acc", "time", "acc_avg", "time_avg", "acc_std", "time_std"])
 
-                #make acc and time fields arrays
-                for data in ["acc", "time"]:
-                    SA[data] = []
-                    QA[data] = []
+                # #make acc and time fields arrays
+                # for data in ["acc", "time"]:
+                #     for attempt in attempts:
+                #         SA[data][attempt] = []
+                #         QA[data][attempt] = []
 
                 for method in ["simulated", "QPU"]:
                     for attempt in attempts:
-                        fname = datapath + f"HSize-{size}/Group-{group}/Lambda-{lamb}/Schedule-{schedule}/{method}/group{group}/attempt{attempt}"
+                        fname = datapath + f"HSize-{size}/Group-{group}/Lambda-{lamb}/Schedule-{schedule}/Results/Trial_1/{method}/group{group}/attempt{attempt}"
                         if method == "simulated":
                             #extract and append data for simulated
                             p = re.compile("Absolute Error:  [-+]?(?:\d*\.*\d+)")
-                            SA["acc"].append(extract_value(fname, p))
+                            SA["acc"][attempt] = extract_value(fname, p)
 
                             p = re.compile("Time:  [-+]?(?:\d*\.*\d+)")
-                            SA["time"].append(extract_value(fname, p)*1000) #convert from seconds to miliseconds
+                            SA["time"][attempt] = extract_value(fname, p)*1000 #convert from seconds to miliseconds
                         else:
                             #extract and append data for QPU
                             p = re.compile("Absolute Error:  [-+]?(?:\d*\.*\d+)")
-                            QA["acc"].append(extract_value(fname, p))
+                            QA["acc"][attempt] = extract_value(fname, p)
 
                             p = re.compile(".*qpu_sampling_time.* [-+]?(?:\d*\.*\d+)")
-                            QA["time"].append(extract_value(fname, p)*0.001) #convert from microseconds to miliseconds
+                            QA["time"][attempt] = extract_value(fname, p)*0.001 #convert from microseconds to miliseconds
 
                 #Fill in Avg, STDEV
                 for df in [SA, QA]:
@@ -76,17 +84,11 @@ for size in hSizes:
                 SA_meta = pd.DataFrame({"hSize": f"hSize_{size}",
                                         "group": f"group_{group}",
                                         "lambda": f"lambda_{lamb}",
-                                        "schedule": f"schedule_{schedule}",
-                                        "data": SA})
+                                        "schedule": f"schedule_{schedule}"}, index = [0])
                 QA_meta = pd.DataFrame({"hSize": f"hSize_{size}",
                                         "group": f"group_{group}",
                                         "lambda": f"lambda_{lamb}",
-                                        "schedule": f"schedule_{schedule}",
-                                        "data": QA})
+                                        "schedule": f"schedule_{schedule}"}, index = [0])
                 
-                simulatedDF.append(SA_meta, ignoreIndex=True)
-                quantumDF.append(QA_meta, ignoreIndex=True)
-
-
-
-print(simulatedDF)
+                simulatedDF = pd.concat([simulatedDF, SA_meta], ignore_index=True)
+                quantumDF = pd.concat([quantumDF, QA_meta], ignore_index=True)
