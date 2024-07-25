@@ -24,7 +24,6 @@ def extract_value(filename, p):
     return val
 
 #Extract Data from Logs
-path = "/workspaces/QuantumCognition/QuantumWalk/RefactoredScalingTests/Plotting/Plots/" #where plots go
 datapath = "/workspaces/QuantumCognition/QuantumWalk/RefactoredScalingTests/Outputs/"
 
 #dataframes
@@ -106,3 +105,5 @@ for size in hSizes:
 
 
 # print(simulatedDF)
+simulatedDF.to_pickle("/workspaces/QuantumCognition/QuantumWalk/RefactoredScalingTests/Plotting/simulated.pkl")
+quantumDF.to_pickle("/workspaces/QuantumCognition/QuantumWalk/RefactoredScalingTests/Plotting/quantum.pkl")
