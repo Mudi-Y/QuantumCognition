@@ -7,6 +7,7 @@ import re
 import os
 
 #helper function to extract values
+extractFailed = False
 def extract_value(filename, p):
     with open(filename, mode="rt", encoding="utf-8") as docFile:
         doc = docFile.read()
@@ -14,7 +15,10 @@ def extract_value(filename, p):
         
         #potentially failed anneal
         if val == []:
-            print(filename, "Invalid anneal!")
+            if extractFailed == False:
+                print("############## Invalid anneal! ##############")
+                extractFailed = True
+            print(fname)
             return np.inf
         
         if "{" in val[0]:
