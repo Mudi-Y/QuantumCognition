@@ -8,8 +8,8 @@ from plots import GeneratePlots
 class AnnealConfig:
     """Annealing paramaters. 
         Default values: method = 'simulated', schedule = [(0.0,0.0),(10.0,0.4),(15.0,0.4),(30.0,0.8),(35.0,0.8),(65.0,1.0)], 
-        groups = [2,3,4], num_runs = 3, trial = 1, lambdaVal = -3.35, output = {working directory}
-        results in {output}/Results/Trial_{trial}."""
+        groups = [2,3,4], num_runs = 3, trial = 1, lambdaVal = -3.35, output = {working directory}.
+        Results in {output}/Results/Trial_{trial}."""
     def __init__(self, 
         method = "simulated", 
         schedule = [(0.0,0.0),(10.0,0.4),(15.0,0.4),(30.0,0.8),(35.0,0.8),(65.0,1.0)], 
@@ -32,6 +32,8 @@ class AnnealConfig:
         else: 
             self.m_output = ""
         self.m_output += f'Results/Trial_{self.m_trial}/'
+        import pathlib
+        pathlib.Path(self.m_output).mkdir(parents=True, exist_ok=True) 
 
 
     def ReadConfig(self, file):
@@ -105,39 +107,26 @@ class AnnealHandler:
 
 
 
-if __name__ == "__main__":
-    # A = AnnealHandler()
-    # A.ReadConfig("/workspaces/QuantumCognition/QuantumWalk/RefactoredConvAndAnneal/config.txt")
-    # A.ReadHamiltonian("/workspaces/QuantumCognition/QuantumWalk/RefactoredConvAndAnneal/hamiltonian.txt")
-    # A.ConstructBQMs()
-    # A.Anneal()
-    # A.SetAnnealQPU()
-    # A.Anneal()
-    # A.Plot()
+# if __name__ == "__main__":
+#     # A = AnnealHandler()
+#     # A.ReadConfig("/workspaces/QuantumCognition/QuantumWalk/RefactoredConvAndAnneal/config.txt")
+#     # A.ReadHamiltonian("/workspaces/QuantumCognition/QuantumWalk/RefactoredConvAndAnneal/hamiltonian.txt")
+#     # A.ConstructBQMs()
+#     # A.Anneal()
+#     # A.SetAnnealQPU()
+#     # A.Anneal()
+#     # A.Plot()
 
 
-<<<<<<< HEAD
-    # A = AnnealHandler()
-    # for i in [4, 8, 16, 32, 64]:
-    #     A.ReadConfig("/workspaces/QuantumCognition/QuantumWalk/RefactoredConvAndAnneal/config.txt")
-    #     A.m_AnnealConfig.m_trial = i
-    #     A.m_AnnealConfig.m_output = f'Results/Trial_{i}/'
-    #     A.ReadHamiltonian(f"/workspaces/QuantumCognition/QuantumWalk/ScalingTests/hamiltonians/hamiltonian_{i}.txt")
-    #     A.ConstructBQMs()
-    #     A.Anneal()
-    #     A.SetAnnealQPU()
-    #     A.Anneal()
-    #     # A.Plot()
-=======
-    A = AnnealHandler()
-    for i in [4, 8, 16, 32, 64]:
-        A.ReadConfig("/workspaces/QuantumCognition/QuantumWalk/RefactoredConvAndAnneal/config.txt")
-        A.m_AnnealConfig.m_trial = i
-        A.m_AnnealConfig.m_output = f'Results/Trial_{i}/'
-        A.ReadHamiltonian(f"/workspaces/QuantumCognition/QuantumWalk/ScalingTests/hamiltonians/hamiltonian_{i}.txt")
-        A.ConstructBQMs()
-        A.Anneal()
-        A.SetAnnealQPU()
-        A.Anneal()
-        # A.Plot()
->>>>>>> refs/remotes/origin/main
+#     ##Scaling Tests
+#     # A = AnnealHandler()
+#     # for i in [4, 8, 16, 32, 64]:
+#     #     A.ReadConfig("/workspaces/QuantumCognition/QuantumWalk/RefactoredConvAndAnneal/config.txt")
+#     #     A.m_AnnealConfig.m_trial = i
+#     #     A.m_AnnealConfig.m_output = f'Results/Trial_{i}/'
+#     #     A.ReadHamiltonian(f"/workspaces/QuantumCognition/QuantumWalk/ScalingTests/hamiltonians/hamiltonian_{i}.txt")
+#     #     A.ConstructBQMs()
+#     #     A.Anneal()
+#     #     A.SetAnnealQPU()
+#     #     A.Anneal()
+#     #     # A.Plot()
