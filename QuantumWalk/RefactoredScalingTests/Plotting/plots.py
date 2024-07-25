@@ -3,79 +3,16 @@ import numpy as np
 import pandas as pd
 import re
 import os
-    
-def extract_value(filename, p):
-    with open(filename, mode="rt", encoding="utf-8") as docFile:
-        doc = docFile.read()
-        val = re.findall(p, doc)
-        if "{" in val[0]:
-            val = float(re.findall(r"[-+]?(?:\d*\.*\d+)", val[0])[0])
-        else:
-            val = float(val[0].split("  ")[1])
-    return val
 
+#import extracted data values
+from extract import numbers, path, SA, QA
 
-#Extract Data from Logs
-#setup code for extraction. IMPORTANT!
-path = "/workspaces/QuantumCognition/QuantumWalk/ScalingTests/Plotting/Plots/"
-numbers = [4, 8, 16, 32, 64]
-annealMethods = ["simulated", "QPU"]
-group = 6
-attempts = 3
-
-#make dataframes to store data
-SA = pd.DataFrame(index = numbers, columns = ["acc", "time", "acc_avg", "time_avg", "acc_std", "time_std"])
-QA = pd.DataFrame(index = numbers, columns = ["acc", "time", "acc_avg", "time_avg", "acc_std", "time_std"])
-
-#make relevant fields arrays
-for number in numbers:
-    for data in ["acc", "time"]:
-        SA[data][number] = []
-        QA[data][number] = []
-
-
-datapath = "/workspaces/QuantumCognition/QuantumWalk/ScalingTests/Results/"
-
-#extraction script
-for annealMethod in annealMethods:
-        for number in numbers:
-            for i in range(attempts):
-                fname = datapath + f"Trial_{number}/{annealMethod}/group{group}/attempt{i+1}"
-                if annealMethod == "simulated":
-                    #extract and append data for simulated
-                    p = re.compile("Absolute Error:  [-+]?(?:\d*\.*\d+)")
-                    SA["acc"][number].append(extract_value(fname, p))
-
-                    p = re.compile("Time:  [-+]?(?:\d*\.*\d+)")
-                    SA["time"][number].append(extract_value(fname, p)*1000) #convert from seconds to miliseconds
-                else:
-                    #extract and append data for QPU
-                    p = re.compile("Absolute Error:  [-+]?(?:\d*\.*\d+)")
-                    QA["acc"][number].append(extract_value(fname, p))
-
-                    p = re.compile(".*qpu_sampling_time.* [-+]?(?:\d*\.*\d+)")
-                    QA["time"][number].append(extract_value(fname, p)*0.001) #convert from microseconds to miliseconds
-
-
-
-#Fill in Avg, STDEV
-for number in numbers:
-    for data in ["acc_avg", "time_avg"]:
-        SA[data][number] = np.mean(SA[data[:-4]][number])
-        QA[data][number] = np.mean(QA[data[:-4]][number])
-for number in numbers:
-    for data in ["acc_std", "time_std"]:
-        SA[data][number] = np.std(SA[data[:-4]][number])
-        QA[data][number] = np.std(QA[data[:-4]][number])
-
-#font specifications
+#font specifications for plots
 plt.rcParams['font.size'] = 12
 plt.rcParams["font.family"] = "Serif"
 
-
 #X values are hamiltonian sizes
 x = numbers
-
 
 #Data to display
 sa_accuracy = SA['acc_avg'].tolist()

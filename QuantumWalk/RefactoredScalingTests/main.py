@@ -23,10 +23,9 @@ outPath = "/workspaces/QuantumCognition/QuantumWalk/RefactoredScalingTests/Outpu
 
 #find appropriate hyperparamaters for each size of hamiltonian
 #paramas are group sizes, anneal schedule, and lambda
-hSizes = [16]
+hSizes = [4, 8, 16]
 groups = [5, 6, 7]
 lambdas = [-2,-3, -4]
-
 annealSchedules = []
 times = [5.0, 10.0, 15.0]
 for time in times:
