@@ -112,8 +112,8 @@ saStd = []
 qaData = []
 qaStd = []
 for size in sizes:
-    saResult = findBestConfig(simulatedDF, size=size, param="time_avg", param2="acc_avg", value=e)
-    qaResult = findBestConfig(quantumDF, size=size, param="time_avg", param2="acc_avg", value=e)
+    saResult = findBestConfig(simulatedDF, size=size, param="acc_avg", param2="acc_avg", value=e)
+    qaResult = findBestConfig(quantumDF, size=size, param="acc_avg", param2="acc_avg", value=e)
     saData.append(saResult["time_avg"])
     saStd.append(saResult["time_std"])
     qaData.append(qaResult["time_avg"])
@@ -123,8 +123,8 @@ fig = plt.figure(figsize = (5, 5))
 ax = fig.add_subplot(1, 1, 1)
 ax.errorbar(x, saData, yerr = saStd, ls='none', capsize=6, color='k') 
 ax.errorbar(x, qaData, yerr = qaStd, ls='none', capsize=6, color='k')
-ax.plot(x, saData, '-v', color='#f8a652', label="SA" if i == trials else "")
-ax.plot(x, qaData, '-o', color='#5f7d41',label="QA-P" if i == trials else "")
+ax.plot(x, saData, '-v', color='#f8a652', label="SA")
+ax.plot(x, qaData, '-o', color='#5f7d41',label="QA-P")
 major_ticks = x
 ymajor_ticks = [0,10,20,30]
 yminor_ticks = [0,5,10,15,20,25,30]
@@ -143,7 +143,7 @@ plt.savefig(path+'time_scaling.pdf')
 
 
 #average absolute error after time t
-t = 20
+t = 30
 #get relevant data for SA and QA for each size hamiltonian
 saData = []
 saStd = []
@@ -162,8 +162,8 @@ ax = fig.add_subplot(1, 1, 1)
 plt.subplots_adjust(left=0.12, right=0.95, top=0.97, bottom=0.12)
 ax.errorbar(x, saData, yerr = saStd, ls='none', capsize=6, color='k') 
 ax.errorbar(x, qaData, yerr = qaStd, ls='none', capsize=6, color='k')
-ax.plot(x, saData, '-v', color='#f8a652', label="SA" if i == trials else "")
-ax.plot(x, qaData, '-o', color='#5f7d41',label="QA-P" if i == trials else "")
+ax.plot(x, saData, '-v', color='#f8a652', label="SA")
+ax.plot(x, qaData, '-o', color='#5f7d41',label="QA-P")
 major_ticks = x
 ymajor_ticks = [0,0.2, 0.4, 0.6, 0.8, 1.0]
 yminor_ticks = [0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0]
