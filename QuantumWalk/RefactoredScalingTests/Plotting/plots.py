@@ -159,14 +159,14 @@ for size in sizes:
 #plot accuracy scaling
 fig = plt.figure(figsize = (5, 5))
 ax = fig.add_subplot(1, 1, 1)
-plt.subplots_adjust(left=0.1, right=0.95, top=0.97, bottom=0.12)
+plt.subplots_adjust(left=0.12, right=0.95, top=0.97, bottom=0.12)
 ax.errorbar(x, saData, yerr = saStd, ls='none', capsize=6, color='k') 
 ax.errorbar(x, qaData, yerr = qaStd, ls='none', capsize=6, color='k')
 ax.plot(x, saData, '-v', color='#f8a652', label="SA" if i == trials else "")
 ax.plot(x, qaData, '-o', color='#5f7d41',label="QA-P" if i == trials else "")
 major_ticks = x
-ymajor_ticks = [0,1,2,3,4]
-yminor_ticks = [0,0.5,1,1.5,2,2.5,3.5,4]
+ymajor_ticks = [0,0.2, 0.4, 0.6, 0.8, 1.0]
+yminor_ticks = [0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0]
 ax.set_xscale('log', base=2)
 ax.set_xticks(major_ticks)
 ax.set_yticks(ymajor_ticks)
