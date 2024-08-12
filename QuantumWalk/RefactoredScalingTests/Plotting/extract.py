@@ -36,7 +36,7 @@ quantumDF = pd.DataFrame(columns=["hSize", "group", "lambda", "schedule", "acc_a
 
 #values to look through data and fill in dataframe
 attempts = [1,2,3] #number of attempts for each aneal configuration
-hSizes = [4, 8, 16]
+hSizes = [4, 8, 16, 32, 64]
 groups = [5, 6, 7]
 lambdas = [-2,-3, -4]
 annealSchedules = []

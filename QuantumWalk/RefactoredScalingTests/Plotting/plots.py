@@ -32,8 +32,7 @@ plt.rcParams["font.family"] = "Serif"
 #plot two seperate plots
 
 #Params from experiments:
-sizes = [4, 8, 16]
-trials = 3
+sizes = [4, 8, 16, 32, 64]
 
 x = sizes
 
@@ -41,11 +40,11 @@ x = sizes
 fig = plt.figure(figsize = (5, 5))
 ax = fig.add_subplot(1, 1, 1)
 plt.subplots_adjust(left=0.1, right=0.95, top=0.97, bottom=0.12)
-for i in range(trials, 82, trials):
-    ax.errorbar(x, sa_accuracy[i-trials : i], yerr = sa_acc_std[i-trials : i], ls='none', capsize=6, color='k') 
-    ax.errorbar(x, qa_accuracy[i-trials : i], yerr = qa_acc_std[i-trials : i], ls='none', capsize=6, color='k')
-    ax.plot(x, sa_accuracy[i-trials : i], '-v', color='#f8a652', label="SA" if i == trials else "")
-    ax.plot(x, qa_accuracy[i-trials : i], '-o', color='#5f7d41',label="QA-P" if i == trials else "")
+for i in range(len(sizes), 82, len(sizes)):
+    ax.errorbar(x, sa_accuracy[i-len(sizes) : i], yerr = sa_acc_std[i-len(sizes) : i], ls='none', capsize=6, color='k') 
+    ax.errorbar(x, qa_accuracy[i-len(sizes) : i], yerr = qa_acc_std[i-len(sizes) : i], ls='none', capsize=6, color='k')
+    ax.plot(x, sa_accuracy[i-len(sizes) : i], '-v', color='#f8a652', label="SA" if i == len(sizes) else "")
+    ax.plot(x, qa_accuracy[i-len(sizes) : i], '-o', color='#5f7d41',label="QA-P" if i == len(sizes) else "")
 major_ticks = x
 ymajor_ticks = [0,1,2,3,4]
 yminor_ticks = [0,0.5,1,1.5,2,2.5,3.5,4]
@@ -66,11 +65,11 @@ plt.savefig(path+'annealing_accuracy.pdf')
 fig = plt.figure(figsize = (5, 5))
 ax = fig.add_subplot(1, 1, 1)
 plt.subplots_adjust(left=0.12, right=0.95, top=0.97, bottom=0.12)
-for i in range(trials, 82, trials):
-    ax.errorbar(x, sa_time[i-trials : i], yerr = sa_time_std[i-trials : i], ls='none', capsize=6, color='k') 
-    ax.errorbar(x, qa_time[i-trials : i], yerr = qa_time_std[i-trials : i], ls='none', capsize=6, color='k')
-    ax.plot(x, sa_time[i-trials : i], '-v', color='#f8a652', label="SA" if i == trials else "")
-    ax.plot(x, qa_time[i-trials : i], '-o', color='#5f7d41',label="QA-P" if i == trials else "")
+for i in range(len(sizes), 82, len(sizes)):
+    ax.errorbar(x, sa_time[i-len(sizes) : i], yerr = sa_time_std[i-len(sizes) : i], ls='none', capsize=6, color='k') 
+    ax.errorbar(x, qa_time[i-len(sizes) : i], yerr = qa_time_std[i-len(sizes) : i], ls='none', capsize=6, color='k')
+    ax.plot(x, sa_time[i-len(sizes) : i], '-v', color='#f8a652', label="SA" if i == len(sizes) else "")
+    ax.plot(x, qa_time[i-len(sizes) : i], '-o', color='#5f7d41',label="QA-P" if i == len(sizes) else "")
 major_ticks = x
 ymajor_ticks = [0,10,20,30]
 yminor_ticks = [0,5,10,15,20,25,30]
