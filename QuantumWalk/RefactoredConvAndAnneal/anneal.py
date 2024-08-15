@@ -47,7 +47,15 @@ def AnnealBQM(BQMPath, valsPath, method, schedule, outpath):
     #Solve the BQM
     num_reads = 100
     start = time.time()
-    sampleset = sampler.sample(bqm, num_reads=num_reads, num_sweeps = 100) if method == "simulated" else (sampler.sample(bqm, num_reads=num_reads, anneal_schedule = anneal_schedule) if anneal_schedule else sampler.sample(bqm, num_reads=num_reads))
+    # sampleset = sampler.sample(bqm, num_reads=num_reads, num_sweeps = 100) if method == "simulated" else (sampler.sample(bqm, num_reads=num_reads, anneal_schedule = anneal_schedule) if anneal_schedule else sampler.sample(bqm, num_reads=num_reads))
+
+    if method == "simulated":
+        sampleset = sampler.sample(bqm, num_reads=num_reads, num_sweeps = 100)
+    else:
+        if anneal_schedule:
+            sampler.sample(bqm, num_reads=num_reads, anneal_schedule = anneal_schedule, return_embedding=True)
+        else:
+            sampler.sample(bqm, num_reads=num_reads, return_embedding = True)
 
 
     end = time.time()

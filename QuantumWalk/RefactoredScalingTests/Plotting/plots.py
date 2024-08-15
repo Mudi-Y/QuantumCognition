@@ -33,6 +33,8 @@ plt.rcParams["font.family"] = "Serif"
 
 #Params from experiments:
 sizes = [4, 8, 16, 32, 64]
+groups = [5, 6, 7]
+lambdas = [-2, -3, -4]
 
 x = sizes
 
@@ -210,3 +212,34 @@ for size in sizes:
     plt.grid(visible=True, which='minor', color='gray', linestyle='--')
     plt.savefig(path+'acc_vs_time/QA/'+f'QA_accuracy_vs_time_{size}.png')
     plt.savefig(path+'acc_vs_time/QA/'+f'QA_accuracy_vs_time_{size}.pdf')
+
+
+
+#draw embedding graphs
+#for each BQM, embed into the solver and draw the topology graph
+from dwave.system.samplers import DWaveSampler
+from dwave.system.composites import EmbeddingComposite
+import pickle
+import dwave_networkx as dnx
+import matplotlib.pyplot as plt
+import networkx as nx
+from pathlib import Path
+
+sampler = DWaveSampler(token="DEV-bc8e40b9fdc4a711ebf6cdcf71747114f89d8baf")
+composite = EmbeddingComposite(sampler)
+print(sampler.properties["topology"])
+
+for size in [4, 8, 16, 32, 64]:
+    for group in [5, 6, 7]:
+        fig = plt.figure(figsize = (100, 100))
+        bqm_path =  Path(__file__).parent / f"../Outputs/HSize-{size}/Group-{group}/Lambda--2/Schedule-[(0.0, 0.0), (10.0, 0.4), (15.0, 0.4), (25.0, 0.8), (30.0, 0.8), (40.0, 1.0)]/Results/Trial_1/BQM/BQM_group{group}"
+        file = open(bqm_path, 'rb')
+        bqm = pickle.load(file)
+        file.close()
+
+        res = composite.sample(bqm, return_embedding=True)
+        embedding = res.info["embedding_context"]["embedding"]
+
+        G = dnx.pegasus_graph(16) #16 because the topology of the solver s "pegasus" with size "16"
+        dnx.draw_pegasus_embedding(G, embedding, show_labels=True)
+        plt.savefig(path+'embeddings/'+f'hSize_{size}_group{group}.png')
