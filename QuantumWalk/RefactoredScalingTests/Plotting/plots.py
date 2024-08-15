@@ -60,8 +60,9 @@ ax.set_ylabel("Absolute Error")
 ax.legend(borderpad=.1, loc='upper left', labelspacing=.15)
 ax.grid(visible=True, which='major', color='gray', linestyle='-')
 plt.grid(visible=True, which='minor', color='gray', linestyle='--')
-plt.savefig(path+'Accuracy.png')
-plt.savefig(path+'annealing_accuracy.pdf')
+# plt.savefig(path+'Accuracy.png')
+# plt.savefig(path+'annealing_accuracy.pdf')
+plt.close(fig)
 
 
 #time taken for each anneal
@@ -85,8 +86,9 @@ ax.set_ylabel("Time (ms)")
 ax.legend(borderpad=.1, loc='upper left', labelspacing=.15)
 ax.grid(visible=True, which='major', color='gray', linestyle='-')
 ax.grid(visible=True, which='minor', color='gray', linestyle='--')
-plt.savefig(path+'Timing.png')
-plt.savefig(path+'annealing_timing.pdf')
+# plt.savefig(path+'Timing.png')
+# plt.savefig(path+'annealing_timing.pdf')
+plt.close(fig)
 
 
 #find setting that has lowest value of 'param' for 'dataframe' and hamiltonian 'size' fitting the 'condition':
@@ -139,8 +141,9 @@ ax.set_ylabel("Time (ms)")
 ax.legend(borderpad=.1, loc='upper left', labelspacing=.15)
 ax.grid(visible=True, which='major', color='gray', linestyle='-')
 ax.grid(visible=True, which='minor', color='gray', linestyle='--')
-plt.savefig(path+'TimeScaling.png')
-plt.savefig(path+'time_scaling.pdf')
+# plt.savefig(path+'TimeScaling.png')
+# plt.savefig(path+'time_scaling.pdf')
+plt.close(fig)
 
 
 
@@ -178,8 +181,9 @@ ax.set_ylabel("Absolute Error")
 ax.legend(borderpad=.1, loc='upper left', labelspacing=.15)
 ax.grid(visible=True, which='major', color='gray', linestyle='-')
 plt.grid(visible=True, which='minor', color='gray', linestyle='--')
-plt.savefig(path+'AccuracyScaling.png')
-plt.savefig(path+'accuracy_scaling.pdf')
+# plt.savefig(path+'AccuracyScaling.png')
+# plt.savefig(path+'accuracy_scaling.pdf')
+plt.close(fig)
 
 
 # Scatter plots of accuracy vs time for each hamiltonian size
@@ -195,8 +199,9 @@ for size in sizes:
     ax.set_title(f"Simulated Annealing Hamiltonian Size {size}")
     ax.grid(visible=True, which='major', color='gray', linestyle='-')
     plt.grid(visible=True, which='minor', color='gray', linestyle='--')
-    plt.savefig(path+'acc_vs_time/SA/'+f'SA_accuracy_vs_time_{size}.png')
-    plt.savefig(path+'acc_vs_time/SA/'+f'SA_accuracy_vs_time_{size}.pdf')
+    # plt.savefig(path+'acc_vs_time/SA/'+f'SA_accuracy_vs_time_{size}.png')
+    # plt.savefig(path+'acc_vs_time/SA/'+f'SA_accuracy_vs_time_{size}.pdf')
+    plt.close(fig)
 
 for size in sizes:
     fig = plt.figure(figsize = (5, 5))
@@ -210,8 +215,9 @@ for size in sizes:
     ax.set_title(f"Quantum Annealing Hamiltonian Size {size}")
     ax.grid(visible=True, which='major', color='gray', linestyle='-')
     plt.grid(visible=True, which='minor', color='gray', linestyle='--')
-    plt.savefig(path+'acc_vs_time/QA/'+f'QA_accuracy_vs_time_{size}.png')
-    plt.savefig(path+'acc_vs_time/QA/'+f'QA_accuracy_vs_time_{size}.pdf')
+    # plt.savefig(path+'acc_vs_time/QA/'+f'QA_accuracy_vs_time_{size}.png')
+    # plt.savefig(path+'acc_vs_time/QA/'+f'QA_accuracy_vs_time_{size}.pdf')
+    plt.close(fig)
 
 
 
@@ -230,7 +236,7 @@ composite = EmbeddingComposite(sampler)
 print(sampler.properties["topology"])
 
 for size in [4, 8, 16, 32, 64]:
-    for group in [5, 6, 7]:
+    for group in [5,6,7]:
         fig = plt.figure(figsize = (100, 100))
         bqm_path =  Path(__file__).parent / f"../Outputs/HSize-{size}/Group-{group}/Lambda--2/Schedule-[(0.0, 0.0), (10.0, 0.4), (15.0, 0.4), (25.0, 0.8), (30.0, 0.8), (40.0, 1.0)]/Results/Trial_1/BQM/BQM_group{group}"
         file = open(bqm_path, 'rb')
@@ -243,3 +249,5 @@ for size in [4, 8, 16, 32, 64]:
         G = dnx.pegasus_graph(16) #16 because the topology of the solver s "pegasus" with size "16"
         dnx.draw_pegasus_embedding(G, embedding, show_labels=True)
         plt.savefig(path+'embeddings/'+f'hSize_{size}_group{group}.png')
+        plt.savefig(path+'embeddings/'+f'hSize_{size}_group{group}.pdf')
+        plt.close(fig)
