@@ -36,7 +36,8 @@ sizes = [4, 8, 16, 32, 64]
 
 x = sizes
 
-#accuracy of anneals
+# basic plots
+# accuracy of anneals
 fig = plt.figure(figsize = (5, 5))
 ax = fig.add_subplot(1, 1, 1)
 plt.subplots_adjust(left=0.1, right=0.95, top=0.97, bottom=0.12)
@@ -53,7 +54,7 @@ ax.set_xticks(major_ticks)
 ax.set_yticks(ymajor_ticks)
 ax.set_yticks(yminor_ticks, minor = True)
 ax.set_xlabel("Hamiltonian Size")
-ax.set_ylabel("Absolute error")
+ax.set_ylabel("Absolute Error")
 ax.legend(borderpad=.1, loc='upper left', labelspacing=.15)
 ax.grid(visible=True, which='major', color='gray', linestyle='-')
 plt.grid(visible=True, which='minor', color='gray', linestyle='--')
@@ -171,9 +172,41 @@ ax.set_xticks(major_ticks)
 ax.set_yticks(ymajor_ticks)
 ax.set_yticks(yminor_ticks, minor = True)
 ax.set_xlabel("Hamiltonian Size")
-ax.set_ylabel("Absolute error")
+ax.set_ylabel("Absolute Error")
 ax.legend(borderpad=.1, loc='upper left', labelspacing=.15)
 ax.grid(visible=True, which='major', color='gray', linestyle='-')
 plt.grid(visible=True, which='minor', color='gray', linestyle='--')
 plt.savefig(path+'AccuracyScaling.png')
 plt.savefig(path+'accuracy_scaling.pdf')
+
+
+# Scatter plots of accuracy vs time for each hamiltonian size
+for size in sizes:
+    fig = plt.figure(figsize = (5, 5))
+    ax = fig.add_subplot(1, 1, 1)
+    plt.subplots_adjust(left=0.12, right=0.95, top=0.9, bottom=0.12)
+    xdata = simulatedDF.loc[simulatedDF["hSize"] == f"hSize_{size}"]["time_avg"]
+    ydata = simulatedDF.loc[simulatedDF["hSize"] == f"hSize_{size}"]["acc_avg"]
+    ax.scatter(xdata, ydata)
+    ax.set_xlabel("Time (ms)")
+    ax.set_ylabel("Absolute Error")
+    ax.set_title(f"Simulated Annealing Hamiltonian Size {size}")
+    ax.grid(visible=True, which='major', color='gray', linestyle='-')
+    plt.grid(visible=True, which='minor', color='gray', linestyle='--')
+    plt.savefig(path+'acc_vs_time/SA/'+f'SA_accuracy_vs_time_{size}.png')
+    plt.savefig(path+'acc_vs_time/SA/'+f'SA_accuracy_vs_time_{size}.pdf')
+
+for size in sizes:
+    fig = plt.figure(figsize = (5, 5))
+    ax = fig.add_subplot(1, 1, 1)
+    plt.subplots_adjust(left=0.12, right=0.95, top=0.9, bottom=0.12)
+    xdata = quantumDF.loc[quantumDF["hSize"] == f"hSize_{size}"]["time_avg"]
+    ydata = quantumDF.loc[quantumDF["hSize"] == f"hSize_{size}"]["acc_avg"]
+    ax.scatter(xdata, ydata)
+    ax.set_xlabel("Time (ms)")
+    ax.set_ylabel("Absolute Error")
+    ax.set_title(f"Quantum Annealing Hamiltonian Size {size}")
+    ax.grid(visible=True, which='major', color='gray', linestyle='-')
+    plt.grid(visible=True, which='minor', color='gray', linestyle='--')
+    plt.savefig(path+'acc_vs_time/QA/'+f'QA_accuracy_vs_time_{size}.png')
+    plt.savefig(path+'acc_vs_time/QA/'+f'QA_accuracy_vs_time_{size}.pdf')
