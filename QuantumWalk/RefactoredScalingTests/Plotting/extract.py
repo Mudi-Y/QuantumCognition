@@ -31,8 +31,8 @@ def extract_value(filename, p):
 datapath = "/workspaces/QuantumCognition/QuantumWalk/RefactoredScalingTests/Outputs/"
 
 #dataframes
-simulatedDF = pd.DataFrame(columns=["hSize", "group", "lambda", "schedule", "acc_avg", "time_avg", "acc_std", "time_std"])
-quantumDF = pd.DataFrame(columns=["hSize", "group", "lambda", "schedule", "acc_avg", "time_avg", "acc_std", "time_std"])
+simulatedDF = pd.DataFrame(columns=["hSize", "group", "n_qubits", "lambda", "schedule", "acc_avg", "time_avg", "acc_std", "time_std"])
+quantumDF = pd.DataFrame(columns=["hSize", "group", "n_qubits", "lambda", "schedule", "acc_avg", "time_avg", "acc_std", "time_std"])
 
 #values to look through data and fill in dataframe
 attempts = [1,2,3] #number of attempts for each aneal configuration
@@ -50,8 +50,8 @@ for size in hSizes:
         for lamb in lambdas:
             for schedule in annealSchedules:
                 #make dataframes to store data
-                SA = pd.DataFrame(index=attempts, columns = ["acc", "time", "acc_avg", "time_avg", "acc_std", "time_std"])
-                QA = pd.DataFrame(index=attempts, columns = ["acc", "time", "acc_avg", "time_avg", "acc_std", "time_std"])
+                SA = pd.DataFrame(index=attempts, columns = ["acc", "time", "acc_avg", "time_avg", "acc_std", "time_std", "n_qubits"])
+                QA = pd.DataFrame(index=attempts, columns = ["acc", "time", "acc_avg", "time_avg", "acc_std", "time_std", "n_qubits"])
 
                 # #make acc and time fields arrays
                 # for data in ["acc", "time"]:
@@ -69,6 +69,9 @@ for size in hSizes:
 
                             p = re.compile("Time:  [-+]?(?:\d*\.*\d+)")
                             SA["time"][attempt] = extract_value(fname, p)*1000 #convert from seconds to miliseconds
+
+                            p = re.compile("Number of Qubits:  [-+]?(?:\d*\.*\d+)")
+                            SA["n_qubits"][attempt] = extract_value(fname, p)
                         else:
                             #extract and append data for QPU
                             p = re.compile("Absolute Error:  [-+]?(?:\d*\.*\d+)")
@@ -76,6 +79,9 @@ for size in hSizes:
 
                             p = re.compile(".*qpu_sampling_time.* [-+]?(?:\d*\.*\d+)")
                             QA["time"][attempt] = extract_value(fname, p)*0.001 #convert from microseconds to miliseconds
+
+                            p = re.compile("Number of Qubits:  [-+]?(?:\d*\.*\d+)")
+                            QA["n_qubits"][attempt] = extract_value(fname, p)
 
                 #Fill in Avg, STDEV
                 for df in [SA, QA]:
@@ -89,6 +95,7 @@ for size in hSizes:
                                         "group": f"group_{group}",
                                         "lambda": f"lambda_{lamb}",
                                         "schedule": f"schedule_{schedule}",
+                                        "n_qubits": SA["n_qubits"][1],
                                         "acc_avg": SA["acc_avg"][1],
                                         "acc_std": SA["acc_std"][1],
                                         "time_avg": SA["time_avg"][1],
@@ -98,6 +105,7 @@ for size in hSizes:
                                         "group": f"group_{group}",
                                         "lambda": f"lambda_{lamb}",
                                         "schedule": f"schedule_{schedule}",
+                                        "n_qubits": QA["n_qubits"][1],
                                         "acc_avg": QA["acc_avg"][1],
                                         "acc_std": QA["acc_std"][1],
                                         "time_avg": QA["time_avg"][1],
