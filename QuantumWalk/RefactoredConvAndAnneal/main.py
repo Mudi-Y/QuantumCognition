@@ -58,12 +58,12 @@ class AnnealHandler:
         Default values: hamiltonian = [[0, 6., 0, 0], [6., 2., 6., 0], [0, 6., 4., 6.], [0, 0, 6., 6.]], AnnealConfig = AnnealConfig class defaults."""
     def __init__(self, hamiltonian = [[0, 6., 0, 0], [6., 2., 6., 0], [0, 6., 4., 6.], [0, 0, 6., 6.]],
         annealConfig = None):
-        self.m_hamiltonian = np.array(hamiltonian)
+        self.m_hamiltonian = np.array(hamiltonian, dtype=complex)
         self.m_AnnealConfig = annealConfig if annealConfig else AnnealConfig()
 
 
     def ReadHamiltonian(self, file):
-        self.m_hamiltonian = np.loadtxt(file, dtype=float)
+        self.m_hamiltonian = np.loadtxt(file, dtype=complex)
 
     def ReadConfig(self, file): #wrapper, just calls corresponding method in AnnealConfig class
         self.m_AnnealConfig.ReadConfig(file)
@@ -95,7 +95,7 @@ class AnnealHandler:
             valsPath = self.m_AnnealConfig.m_output + f'BQM/BQM_group{group}_vals'
             for run in range(1, self.m_AnnealConfig.m_runs+1):
                 outpath = self.m_AnnealConfig.m_output + f'{self.m_AnnealConfig.m_method}/group{group}/attempt{run}'
-                AnnealBQM(BQMPath, valsPath, self.m_AnnealConfig.m_method, self.m_AnnealConfig.m_schedule, outpath)
+                AnnealBQM(self.m_hamiltonian, BQMPath, valsPath, self.m_AnnealConfig.m_method, self.m_AnnealConfig.m_schedule, outpath)
 
 
     def Plot(self, plots = ["acc", "time", "size"]):

@@ -9,7 +9,7 @@ from dwave.system.composites import EmbeddingComposite
 import dimod
 from dwave.samplers import SimulatedAnnealingSampler
 
-def AnnealBQM(BQMPath, valsPath, method, schedule, outpath):
+def AnnealBQM(hamiltonian, BQMPath, valsPath, method, schedule, outpath):
 
     #create log file
     logfile = outpath
@@ -53,9 +53,9 @@ def AnnealBQM(BQMPath, valsPath, method, schedule, outpath):
         sampleset = sampler.sample(bqm, num_reads=num_reads, num_sweeps = 100)
     else:
         if anneal_schedule:
-            sampler.sample(bqm, num_reads=num_reads, anneal_schedule = anneal_schedule, return_embedding=True)
+            sampleset = sampler.sample(bqm, num_reads=num_reads, anneal_schedule = anneal_schedule, return_embedding=True)
         else:
-            sampler.sample(bqm, num_reads=num_reads, return_embedding = True)
+            sampleset = sampler.sample(bqm, num_reads=num_reads, return_embedding = True)
 
 
     end = time.time()
@@ -114,11 +114,14 @@ def AnnealBQM(BQMPath, valsPath, method, schedule, outpath):
     logfile.write(str(experimental_eigenvalue)+'\n')
 
     #print(np.linalg.eig(Hamiltonian))
-    I = np.eye(2, 2, dtype=complex)
-    X = np.array([[0, 1], [1, 0]], dtype=complex)
-    Z = np.array([[1, 0], [0,-1]], dtype=complex)
-    Y = complex(0,-1)*np.matmul(Z,X)
-    v,d = np.linalg.eig(3*np.kron(I,I)+6*np.kron(I,X)-1*np.kron(I,Z)+3*np.kron(X,X) +3*np.kron(Y,Y)-2*np.kron(Z,I))
+    # I = np.eye(2, 2, dtype=complex)
+    # X = np.array([[0, 1], [1, 0]], dtype=complex)
+    # Z = np.array([[1, 0], [0,-1]], dtype=complex)
+    # Y = complex(0,-1)*np.matmul(Z,X)
+    # v,d = np.linalg.eig(3*np.kron(I,I)+6*np.kron(I,X)-1*np.kron(I,Z)+3*np.kron(X,X) +3*np.kron(Y,Y)-2*np.kron(Z,I))
+    
+    v,d = np.linalg.eig(hamiltonian)
+
     logfile.write("\nEigen Values:  ")
     logfile.write(str(v)+'\n')
 

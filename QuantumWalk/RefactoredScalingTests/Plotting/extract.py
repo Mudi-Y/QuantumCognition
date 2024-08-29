@@ -6,6 +6,9 @@ import pandas as pd
 import re
 import os
 
+#trial number (see comment for "trial number" in main.py)
+trial = 2
+
 #helper function to extract values
 extractFailed = False
 def extract_value(filename, p):
@@ -61,7 +64,7 @@ for size in hSizes:
 
                 for method in ["simulated", "QPU"]:
                     for attempt in attempts:
-                        fname = datapath + f"HSize-{size}/Group-{group}/Lambda-{lamb}/Schedule-{schedule}/Results/Trial_1/{method}/group{group}/attempt{attempt}"
+                        fname = datapath + f"HSize-{size}/Group-{group}/Lambda-{lamb}/Schedule-{schedule}/Results/Trial_{trial}/{method}/group{group}/attempt{attempt}"
                         if method == "simulated":
                             #extract and append data for simulated
                             p = re.compile("Absolute Error:  [-+]?(?:\d*\.*\d+)")

@@ -216,6 +216,7 @@ def generateNewHamiltonian(H_expr, num_orig_qubits, num_new_groups):
 
 def buildBQM(num_new_groups, Hamiltonian, lambdaVal, BQMPath, valsPath):
     """Construct BQMs from provided hamiltonian and AnnealConfig paramaters. Save in the /BQM/ directory in both .pkl and human readable formats."""
+    # print(Hamiltonian)
 
     #create log file
     logfile = BQMPath+".log"
@@ -228,7 +229,8 @@ def buildBQM(num_new_groups, Hamiltonian, lambdaVal, BQMPath, valsPath):
     logfile.write(Pauli_string+'\n')
     num_qubits = 2
 
-    H_orig = "3*i +6*x2 -z2 +3*x1*x2 +3*y1*y2-2*z1"
+    # H_orig = "3*i +6*x2 -z2 +3*x1*x2 +3*y1*y2-2*z1"
+    H_orig = Pauli_string
 
     H_orig_exp = parse_expr(H_orig)
 
