@@ -9,7 +9,7 @@ from RefactoredConvAndAnneal import main as RCA
 outPath = "/workspaces/QuantumCognition/QuantumWalk/RefactoredScalingTests/Outputs/"
 
 #Trial number. VERY IMPORTANT! Increase each time to prevent over-writing old results
-trial = 2
+trial = 3
 
 # #find appropriate hyperparamaters for each size of hamiltonian
 # #paramas are group sizes, anneal schedule, and lambda
@@ -26,9 +26,9 @@ trial = 2
 
 #find appropriate hyperparamaters for each size of hamiltonian
 #paramas are group sizes, anneal schedule, and lambda
-hSizes = [8, 16]
+hSizes = [8]
 groups = [5, 6, 7]
-lambdas = [-2, -3, -4]
+lambdas = [-15, -20, -25]
 annealSchedules = []
 times = [5.0, 10.0, 15.0]
 for time in times:

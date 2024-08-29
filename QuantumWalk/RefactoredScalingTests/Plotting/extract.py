@@ -7,7 +7,7 @@ import re
 import os
 
 #trial number (see comment for "trial number" in main.py)
-trial = 2
+from main import trial
 
 #helper function to extract values
 extractFailed = False
