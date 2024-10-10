@@ -107,15 +107,15 @@ class AnnealHandler:
 
 
 
-# if __name__ == "__main__":
-#     # A = AnnealHandler()
-#     # A.ReadConfig("/workspaces/QuantumCognition/QuantumWalk/RefactoredConvAndAnneal/config.txt")
-#     # A.ReadHamiltonian("/workspaces/QuantumCognition/QuantumWalk/RefactoredConvAndAnneal/hamiltonian.txt")
-#     # A.ConstructBQMs()
-#     # A.Anneal()
-#     # A.SetAnnealQPU()
-#     # A.Anneal()
-#     # A.Plot()
+if __name__ == "__main__":
+    A = AnnealHandler()
+    A.ReadConfig("/workspaces/QuantumCognition/QuantumWalk/RefactoredConvAndAnneal/config.txt")
+    A.ReadHamiltonian("/workspaces/QuantumCognition/QuantumWalk/RefactoredConvAndAnneal/hamiltonian_8.txt")
+    # A.ConstructBQMs()
+    # A.Anneal()
+    # A.SetAnnealQPU()
+    # A.Anneal()
+    A.Plot()
 
 
 #     ##Scaling Tests

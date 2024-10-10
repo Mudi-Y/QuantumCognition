@@ -11,7 +11,9 @@ def GeneratePlots(trial, groups, runs, datapath, outpath, plots):
         with open(filename, mode="rt", encoding="utf-8") as docFile:
             doc = docFile.read()
             val = re.findall(p, doc)
-            if "{" in val[0]:
+            if not val:
+                val = float('inf')
+            elif "{" in val[0]:
                 val = float(re.findall(r"[-+]?(?:\d*\.*\d+)", val[0])[0])
             else:
                 val = float(val[0].split("  ")[1])
@@ -33,8 +35,8 @@ def GeneratePlots(trial, groups, runs, datapath, outpath, plots):
     #make relevant fields arrays
     for group in groups:
         for data in ["acc", "time", "size"]:
-            SA[data][group] = []
-            QA[data][group] = []
+            SA.loc[group, data] = []
+            QA.loc[group, data] = []
 
 
     #extraction script
@@ -44,34 +46,34 @@ def GeneratePlots(trial, groups, runs, datapath, outpath, plots):
                     fname = datapath + f"{annealMethod}/group{group}/attempt{i+1}"
                     if annealMethod == "simulated":
                         #extract and append data for simulated
-                        p = re.compile("Absolute Error:  [-+]?(?:\d*\.*\d+)")
+                        p = re.compile(r"Absolute Error:  [-+]?(?:\d*\.*\d+)")
                         SA["acc"][group].append(extract_value(fname, p))
 
-                        p = re.compile("Number of Qubits:  [-+]?(?:\d*\.*\d+)")
+                        p = re.compile(r"Number of Qubits:  [-+]?(?:\d*\.*\d+)")
                         SA["size"][group].append(extract_value(fname, p))
 
-                        p = re.compile("Time:  [-+]?(?:\d*\.*\d+)")
+                        p = re.compile(r"Time:  [-+]?(?:\d*\.*\d+)")
                         SA["time"][group].append(extract_value(fname, p)*1000) #convert from seconds to miliseconds
                     else:
                         #extract and append data for QPU
-                        p = re.compile("Absolute Error:  [-+]?(?:\d*\.*\d+)")
+                        p = re.compile(r"Absolute Error:  [-+]?(?:\d*\.*\d+)")
                         QA["acc"][group].append(extract_value(fname, p))
 
-                        p = re.compile("Number of Qubits:  [-+]?(?:\d*\.*\d+)")
+                        p = re.compile(r"Number of Qubits:  [-+]?(?:\d*\.*\d+)")
                         QA["size"][group].append(extract_value(fname, p))
 
-                        p = re.compile(".*qpu_sampling_time.* [-+]?(?:\d*\.*\d+)")
+                        p = re.compile(r".*qpu_sampling_time.* [-+]?(?:\d*\.*\d+)")
                         QA["time"][group].append(extract_value(fname, p)*0.001) #convert from microseconds to miliseconds
 
     #Fill in Avg, STDEV
     for group in groups:
         for data in ["acc_avg", "time_avg", "size_avg"]:
-            SA[data][group] = np.mean(SA[data[:-4]][group])
-            QA[data][group] = np.mean(QA[data[:-4]][group])
+            SA.loc[group, data] = np.mean(SA[data[:-4]][group])
+            QA.loc[group, data] = np.mean(QA[data[:-4]][group])
     for group in groups:
         for data in ["acc_std", "time_std", "size_std"]:
-            SA[data][group] = np.std(SA[data[:-4]][group])
-            QA[data][group] = np.std(QA[data[:-4]][group])
+            SA.loc[group, data] = np.std(SA[data[:-4]][group])
+            QA.loc[group, data] = np.std(QA[data[:-4]][group])
 
     #font specifications
     plt.rcParams['font.size'] = 12
