@@ -112,15 +112,15 @@ def GeneratePlots(trial, groups, runs, datapath, outpath, plots):
     if "acc" in plots:
         fig = plt.figure(figsize = (2.5, 2.5))
         ax = fig.add_subplot(1, 1, 1)
-        plt.subplots_adjust(left=0.225, right=0.959, top=0.97, bottom=0.2)
+        plt.subplots_adjust(left=0.18, right=0.959, top=0.97, bottom=0.2)
         ax.errorbar(x, sa_accuracy, yerr = sa_acc_std, ls='none', capsize=6, color='k') 
         ax.plot(x, sa_accuracy, '-v', color='#f8a652',label="SA")
         ax.errorbar(x, qa_accuracy, yerr = sa_acc_std, ls='none', capsize=6, color='k') 
         ax.plot(x, qa_accuracy, '-o', color='#5f7d41',label="QA-P")
-        major_ticks = [2,4,6,8,10]
-        minor_ticks = [2,3,4,5,6,7,8,9,10]
-        ymajor_ticks = [0,1,2,3,4]
-        yminor_ticks = [0,0.5,1,1.5,2,2.5,3.5,4]
+        major_ticks = [2,4,6,8,10,12,14,16]
+        minor_ticks = [2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]
+        ymajor_ticks = [0,1,2,3,4,5,6,7,8]
+        yminor_ticks = [0,0.5,1,1.5,2,2.5,3.5,4,4.5,5,5.5,6,6.5,7,7.5,8]
         ax.set_xticks(major_ticks)
         ax.set_xticks(minor_ticks, minor=True)
         ax.set_yticks(ymajor_ticks)
@@ -141,8 +141,8 @@ def GeneratePlots(trial, groups, runs, datapath, outpath, plots):
         ax.plot(x, sa_time, '-v', color='#f8a652', label="SA")
         ax.errorbar(x, qa_time, yerr = qa_time_std, ls='none', capsize=6, color='k') 
         ax.plot(x, qa_time, '-o', color='#5f7d41', label="QA-P")
-        major_ticks = [2,4,6,8,10]
-        minor_ticks = [2,3,4,5,6,7,8,9,10]
+        major_ticks = [2,4,6,8,10,12,14,16]
+        minor_ticks = [2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]
         ymajor_ticks = [0,10,20,30]
         yminor_ticks = [0,5,10,15,20,25,30]
         ax.set_xticks(major_ticks)
@@ -160,12 +160,12 @@ def GeneratePlots(trial, groups, runs, datapath, outpath, plots):
     if "size" in plots:
         fig = plt.figure(figsize = (2.5, 2.5))
         ax = fig.add_subplot(1, 1, 1)
-        plt.subplots_adjust(left=0.225, right=0.959, top=0.975, bottom=0.2)
+        plt.subplots_adjust(left=0.265, right=0.959, top=0.975, bottom=0.2)
         ax.plot(x, qa_size, '-o', color='#5f7d41')
-        major_ticks = [2,4,6,8,10]
-        minor_ticks = [2,3,4,5,6,7,8,9,10]
-        ymajor_ticks = [0,20,40,60,80]
-        yminor_ticks = [0,10,20,30,40,50,60,70,80]
+        major_ticks = [2,4,6,8,10,12,14,16]
+        minor_ticks = [2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]
+        ymajor_ticks = [0,20,40,60,80,100,120,140,160,180]
+        yminor_ticks = [0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180]
         ax.set_xticks(major_ticks)
         ax.set_xticks(minor_ticks, minor=True)
         ax.set_yticks(ymajor_ticks)
